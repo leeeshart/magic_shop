@@ -49,7 +49,7 @@ Contributions are welcome! Please open issues or pull requests with your ideas, 
 
 ## 👩‍💻 Maintainers
 
-- [leeeshart](https://github.com/leeeshart) and contributors
+- [leeeshart](https://github.com/leeeshart), [KaustubhNeoge](https://github.com/KaustubhNeoge), [premashtekar](https://github.com/premashtekar)  and contributors
 
 
 ## 🪪 License
