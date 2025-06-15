@@ -21,7 +21,7 @@ Magic Shop is an early-stage AI chatbot that makes learning personal for everyon
 
 ## 🚀 Features
 
-- Quiz-based learning style and MBTI personality identification
+- Adaptive quiz system: The chatbot asks questions and increases the difficulty level based on the user's performance. For example, if a user answers three consecutive questions correctly, the quiz level     increases to provide a greater challenge.
 - AI-powered chatbot that adapts to your learning preferences
 - Document upload for personalized summaries and study aids
 - Multiple output formats: mind maps, audio, stories, and more
