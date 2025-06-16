@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Personalized Learning Quiz</title>
+  <style>
+    :root {
+      --bg: #ff9f9fb6;
+      --text: #111;
+      --card: #ff636398;
+      --result-bg: #65cbd8;
+      --question-bg: #ffc0cb;
+    }
+
+    body.dark {
+      --bg: #000000d2;
+      --text: #e0e0e0;
+      --card: #000000dc;
+      --result-bg: #093c55;
+      --question-bg: #3b3536;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Times New Roman', Times, serif;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      background-color: var(--card);
+      padding: 30px;
+      border-radius: 30px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.514);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .question {
+      background-color: var(--question-bg);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      font-size: 22px;
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: all 0.5s ease;
+    }
+
+    .question.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 28px;
+      font-size: 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: var(--result-bg);
+      border-radius: 10px;
+      font-size: 25px;
+      display: none;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.5s ease;
+    }
+
+    #result.show {
+      display: block;
+      animation: bounceUp 0.6s ease;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes bounceUp {
+      0% {
+        transform: translateY(40px);
+        opacity: 0;
+      }
+      50% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    .toggle-container {
+      text-align: right;
+      margin-bottom: 15px;
+    }
+
+    .toggle-container button {
+      font-size: 16px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toggle-container">
+    <button id="modeToggleBtn">🌗 Switch to Dark Mode</button>
+  </div>
+
+  <div class="container">
+    <h2>🧠 Personalized Learning Quiz 🧠</h2>
+    <form id="quizForm">
+      <div class="question">
+        <p>1. How do you understand things best?</p>
+        <label><input type="radio" name="q1" value="Visual" required> By seeing images or diagrams</label>
+        <label><input type="radio" name="q1" value="Auditory"> By listening to explanations</label>
+        <label><input type="radio" name="q1" value="Story"> By hearing examples or stories</label>
+      </div>
+
+      <div class="question">
+        <p>2. How do you remember school topics?</p>
+        <label><input type="radio" name="q2" value="Visual" required> Through pictures, charts, or drawings</label>
+        <label><input type="radio" name="q2" value="Auditory"> By recalling what I heard in class</label>
+        <label><input type="radio" name="q2" value="Story"> Through interesting stories or real-life links</label>
+      </div>
+
+      <div class="question">
+        <p>3. What helps you learn new things faster?</p>
+        <label><input type="radio" name="q3" value="Visual" required> Clear visuals or mind maps</label>
+        <label><input type="radio" name="q3" value="Auditory"> Voice explanations or class discussions</label>
+        <label><input type="radio" name="q3" value="Story"> Simple stories or daily-life examples</label>
+      </div>
+
+      <div class="question">
+        <p>4. What kind of notes do you prefer?</p>
+        <label><input type="radio" name="q4" value="Visual" required> Color-coded and with diagrams</label>
+        <label><input type="radio" name="q4" value="Auditory"> Notes I can listen to or repeat out loud</label>
+        <label><input type="radio" name="q4" value="Story"> Notes that tell a story or make connections</label>
+      </div>
+
+      <div class="question">
+        <p>5. When learning something new, you prefer:</p>
+        <label><input type="radio" name="q5" value="E" required> Talking and sharing ideas with others</label>
+        <label><input type="radio" name="q5" value="I"> Thinking quietly by yourself</label>
+      </div>
+
+      <div class="question">
+        <p>6. You understand better by:</p>
+        <label><input type="radio" name="q6" value="S" required> Noticing real facts and details</label>
+        <label><input type="radio" name="q6" value="N"> Seeing big ideas and future possibilities</label>
+      </div>
+
+      <div class="question">
+        <p>7. You make decisions based on:</p>
+        <label><input type="radio" name="q7" value="T" required> Logic and what makes sense</label>
+        <label><input type="radio" name="q7" value="F"> Feelings and what feels right to people</label>
+      </div>
+
+      <div class="question">
+        <p>8. You like to:</p>
+        <label><input type="radio" name="q8" value="J" required> Be organized and plan ahead</label>
+        <label><input type="radio" name="q8" value="P"> Be flexible and keep options open</label>
+      </div>
+
+      <button type="submit">See My Learning Type</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const mbtiDescriptions = {
+      ISTJ: "You are practical, responsible, and good with details.",
+      ISFJ: "You care about others and remember small things.",
+      INFJ: "You think deeply and connect ideas with emotions.",
+      INTJ: "You are a planner and like logic and strategy.",
+      ISTP: "You like solving real problems and learning by doing.",
+      ISFP: "You are quiet, kind, and creative.",
+      INFP: "You care deeply and enjoy meaningful stories.",
+      INTP: "You are curious and love to explore ideas.",
+      ESTP: "You learn by jumping into real-world challenges.",
+      ESFP: "You learn by doing and enjoy experiences.",
+      ENFP: "You are full of ideas and learn through fun and meaning.",
+      ENTP: "You enjoy debates and thinking in new ways.",
+      ESTJ: "You like rules, steps, and structure.",
+      ESFJ: "You are warm, helpful, and learn best with others.",
+      ENFJ: "You like helping others grow and learn.",
+      ENTJ: "You are confident, goal-driven, and organized."
+    };
+
+    document.getElementById("quizForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      let visual = 0, auditory = 0, story = 0;
+      const styleQuestions = ["q1", "q2", "q3", "q4"];
+      styleQuestions.forEach(q => {
+        const answer = document.querySelector(`input[name="${q}"]:checked`).value;
+        if (answer === "Visual") visual++;
+        else if (answer === "Auditory") auditory++;
+        else story++;
+      });
+
+      const ei = document.querySelector('input[name="q5"]:checked').value;
+      const sn = document.querySelector('input[name="q6"]:checked').value;
+      const tf = document.querySelector('input[name="q7"]:checked').value;
+      const jp = document.querySelector('input[name="q8"]:checked').value;
+
+      const mbti = ei + sn + tf + jp;
+
+      let learningStyle = "";
+      if (visual >= auditory && visual >= story) learningStyle = "Visual";
+      else if (auditory >= visual && auditory >= story) learningStyle = "Auditory";
+      else learningStyle = "Story-based";
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.classList.add("show");
+      resultDiv.innerHTML = `
+        <strong>🎯 Your Personalized Learning Result:</strong><br><br>
+        📘 <strong>Learning Style:</strong> ${learningStyle}<br>
+        🔍 <strong>Personality Type (MBTI):</strong> ${mbti}<br>
+        🧠 <em>${mbtiDescriptions[mbti]}</em><br><br>
+        ✅ This will help us personalize your study experience!
+      `;
+
+      localStorage.setItem("learningStyle", learningStyle);
+      localStorage.setItem("mbtiType", mbti);
+    });
+
+    const toggleBtn = document.getElementById("modeToggleBtn");
+
+    function updateThemeButton() {
+      if (document.body.classList.contains("dark")) {
+        toggleBtn.textContent = "☀️ Switch to Light Mode";
+      } else {
+        toggleBtn.textContent = "🌗 Switch to Dark Mode";
+      }
+    }
+
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+    }
+    updateThemeButton();
+
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+      updateThemeButton();
+    });
+
+    window.addEventListener("load", () => {
+      const questions = document.querySelectorAll(".question");
+      questions.forEach((q, i) => {
+        setTimeout(() => {
+          q.classList.add("visible");
+        }, i * 150);
+      });
+    });
+  </script>
+</body>
+</html>
