@@ -1,285 +1,622 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Personalized Learning Quiz</title>
-  <style>
-    :root {
-      --bg: #ff9f9fb6;
-      --text: #111;
-      --card: #ff636398;
-      --result-bg: #65cbd8;
-      --question-bg: #ffc0cb;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personalized Learning Quiz</title>
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --card-light: rgba(255, 255, 255, 0.15);
+        --card-dark: rgba(0, 0, 0, 0.3);
+        --text-light: #1a202c;
+        --text-dark: #e2e8f0;
+        --accent: #4fd1c7;
+        --success: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --question-light: rgba(255, 255, 255, 0.2);
+        --question-dark: rgba(0, 0, 0, 0.2);
+        --shadow-light: rgba(0, 0, 0, 0.1);
+        --shadow-dark: rgba(0, 0, 0, 0.3);
+      }
 
-    body.dark {
-      --bg: #000000d2;
-      --text: #e0e0e0;
-      --card: #000000dc;
-      --result-bg: #093c55;
-      --question-bg: #3b3536;
-    }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Times New Roman', Times, serif;
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
+      body {
+        background: var(--primary-gradient);
+        color: var(--text-light);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        padding: 20px;
+        min-height: 100vh;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow-x: hidden;
+      }
 
-    .container {
-      background-color: var(--card);
-      padding: 30px;
-      border-radius: 30px;
-      max-width: 800px;
-      margin: auto;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.514);
-    }
+      body.dark {
+        background: linear-gradient(
+          135deg,
+          #0c0c0c 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        color: var(--text-dark);
+      }
 
-    h2 {
-      text-align: center;
-      font-size: 30px;
-    }
+      .cursor-glow {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle,
+          rgba(79, 209, 197, 0.3) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1;
+        transition: all 0.1s ease;
+        transform: translate(-50%, -50%);
+      }
 
-    .question {
-      background-color: var(--question-bg);
-      padding: 25px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      font-size: 22px;
-      opacity: 0;
-      transform: translateX(-40px);
-      transition: all 0.5s ease;
-    }
+      .container {
+        background: var(--card-light);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 40px;
+        border-radius: 25px;
+        max-width: 900px;
+        margin: auto;
+        box-shadow: 0 20px 40px var(--shadow-light);
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+      }
 
-    .question.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
+      body.dark .container {
+        background: var(--card-dark);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px var(--shadow-dark);
+      }
 
-    label {
-      display: block;
-      margin-top: 10px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+      .container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px var(--shadow-light);
+      }
 
-    button {
-      margin-top: 30px;
-      padding: 12px 28px;
-      font-size: 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+      body.dark .container:hover {
+        box-shadow: 0 25px 50px var(--shadow-dark);
+      }
 
-    #result {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: var(--result-bg);
-      border-radius: 10px;
-      font-size: 25px;
-      display: none;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.5s ease;
-    }
-
-    #result.show {
-      display: block;
-      animation: bounceUp 0.6s ease;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @keyframes bounceUp {
-      0% {
-        transform: translateY(40px);
+      h2 {
+        text-align: center;
+        font-size: clamp(24px, 4vw, 36px);
+        margin-bottom: 30px;
+        color: #2d3748;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .question {
+        background: var(--question-light);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 30px;
+        border-radius: 20px;
+        margin-bottom: 25px;
+        font-size: clamp(18px, 2.5vw, 22px);
         opacity: 0;
+        transform: translateX(-40px);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        color: var(--text-light);
       }
-      50% {
-        transform: translateY(-10px);
+
+      body.dark .question {
+        background: var(--question-dark);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-dark);
+      }
+
+      .question::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .question:hover::before {
+        left: 100%;
+      }
+
+      .question:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 30px rgba(79, 209, 197, 0.2);
+        border-color: var(--accent);
+      }
+
+      .question.visible {
         opacity: 1;
+        transform: translateX(0);
       }
-      100% {
+
+      .question p {
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: inherit;
+      }
+
+      label {
+        display: block;
+        margin: 15px 0;
+        font-size: clamp(16px, 2vw, 20px);
+        cursor: pointer;
+        padding: 12px 20px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid transparent;
+        color: inherit;
+      }
+
+      label:hover {
+        background: rgba(79, 209, 197, 0.1);
+        border-color: var(--accent);
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px rgba(79, 209, 197, 0.2);
+      }
+
+      input[type="radio"] {
+        margin-right: 12px;
+        accent-color: var(--accent);
+        transform: scale(1.2);
+      }
+
+      button {
+        margin-top: 40px;
+        padding: 16px 40px;
+        font-size: clamp(18px, 2.5vw, 22px);
+        background: var(--success);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      button:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+      }
+
+      button:active {
+        transform: translateY(-1px) scale(1.02);
+      }
+
+      #result {
+        margin-top: 40px;
+        padding: 30px;
+        background: linear-gradient(
+          135deg,
+          rgba(79, 209, 197, 0.2),
+          rgba(102, 126, 234, 0.2)
+        );
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(79, 209, 197, 0.3);
+        border-radius: 20px;
+        font-size: clamp(18px, 2.5vw, 25px);
+        display: none;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        color: var(--text-light);
+      }
+
+      body.dark #result {
+        color: var(--text-dark);
+      }
+
+      #result.show {
+        display: block;
+        animation: bounceUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 1;
         transform: translateY(0);
       }
-    }
 
-    .toggle-container {
-      text-align: right;
-      margin-bottom: 15px;
-    }
+      @keyframes bounceUp {
+        0% {
+          transform: translateY(40px) scale(0.9);
+          opacity: 0;
+        }
+        50% {
+          transform: translateY(-10px) scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
 
-    .toggle-container button {
-      font-size: 16px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
+      .toggle-container {
+        text-align: right;
+        margin-bottom: 20px;
+      }
 
-  <div class="toggle-container">
-    <button id="modeToggleBtn">🌗 Switch to Dark Mode</button>
-  </div>
+      .toggle-container button {
+        font-size: 16px;
+        padding: 12px 20px;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: var(--text-light);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
 
-  <div class="container">
-    <h2>🧠 Personalized Learning Quiz 🧠</h2>
-    <form id="quizForm">
-      <div class="question">
-        <p>1. How do you understand things best?</p>
-        <label><input type="radio" name="q1" value="Visual" required> By seeing images or diagrams</label>
-        <label><input type="radio" name="q1" value="Auditory"> By listening to explanations</label>
-        <label><input type="radio" name="q1" value="Story"> By hearing examples or stories</label>
-      </div>
+      body.dark .toggle-container button {
+        color: var(--text-dark);
+      }
 
-      <div class="question">
-        <p>2. How do you remember school topics?</p>
-        <label><input type="radio" name="q2" value="Visual" required> Through pictures, charts, or drawings</label>
-        <label><input type="radio" name="q2" value="Auditory"> By recalling what I heard in class</label>
-        <label><input type="radio" name="q2" value="Story"> Through interesting stories or real-life links</label>
-      </div>
+      .toggle-container button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
 
-      <div class="question">
-        <p>3. What helps you learn new things faster?</p>
-        <label><input type="radio" name="q3" value="Visual" required> Clear visuals or mind maps</label>
-        <label><input type="radio" name="q3" value="Auditory"> Voice explanations or class discussions</label>
-        <label><input type="radio" name="q3" value="Story"> Simple stories or daily-life examples</label>
-      </div>
+      @media (max-width: 768px) {
+        body {
+          padding: 15px;
+        }
 
-      <div class="question">
-        <p>4. What kind of notes do you prefer?</p>
-        <label><input type="radio" name="q4" value="Visual" required> Color-coded and with diagrams</label>
-        <label><input type="radio" name="q4" value="Auditory"> Notes I can listen to or repeat out loud</label>
-        <label><input type="radio" name="q4" value="Story"> Notes that tell a story or make connections</label>
-      </div>
+        .container {
+          padding: 25px;
+          border-radius: 20px;
+        }
 
-      <div class="question">
-        <p>5. When learning something new, you prefer:</p>
-        <label><input type="radio" name="q5" value="E" required> Talking and sharing ideas with others</label>
-        <label><input type="radio" name="q5" value="I"> Thinking quietly by yourself</label>
-      </div>
+        .question {
+          padding: 20px;
+          margin-bottom: 20px;
+        }
 
-      <div class="question">
-        <p>6. You understand better by:</p>
-        <label><input type="radio" name="q6" value="S" required> Noticing real facts and details</label>
-        <label><input type="radio" name="q6" value="N"> Seeing big ideas and future possibilities</label>
-      </div>
+        label {
+          padding: 10px 15px;
+          margin: 10px 0;
+        }
 
-      <div class="question">
-        <p>7. You make decisions based on:</p>
-        <label><input type="radio" name="q7" value="T" required> Logic and what makes sense</label>
-        <label><input type="radio" name="q7" value="F"> Feelings and what feels right to people</label>
-      </div>
+        button {
+          padding: 14px 30px;
+          margin-top: 30px;
+        }
 
-      <div class="question">
-        <p>8. You like to:</p>
-        <label><input type="radio" name="q8" value="J" required> Be organized and plan ahead</label>
-        <label><input type="radio" name="q8" value="P"> Be flexible and keep options open</label>
-      </div>
+        #result {
+          padding: 20px;
+          margin-top: 30px;
+        }
+      }
 
-      <button type="submit">See My Learning Type</button>
-    </form>
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px;
+        }
 
-    <div id="result"></div>
-  </div>
+        .question {
+          padding: 15px;
+        }
 
-  <script>
-    const mbtiDescriptions = {
-      ISTJ: "You are practical, responsible, and good with details.",
-      ISFJ: "You care about others and remember small things.",
-      INFJ: "You think deeply and connect ideas with emotions.",
-      INTJ: "You are a planner and like logic and strategy.",
-      ISTP: "You like solving real problems and learning by doing.",
-      ISFP: "You are quiet, kind, and creative.",
-      INFP: "You care deeply and enjoy meaningful stories.",
-      INTP: "You are curious and love to explore ideas.",
-      ESTP: "You learn by jumping into real-world challenges.",
-      ESFP: "You learn by doing and enjoy experiences.",
-      ENFP: "You are full of ideas and learn through fun and meaning.",
-      ENTP: "You enjoy debates and thinking in new ways.",
-      ESTJ: "You like rules, steps, and structure.",
-      ESFJ: "You are warm, helpful, and learn best with others.",
-      ENFJ: "You like helping others grow and learn.",
-      ENTJ: "You are confident, goal-driven, and organized."
-    };
+        label {
+          padding: 8px 12px;
+        }
+      }
 
-    document.getElementById("quizForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
 
-      let visual = 0, auditory = 0, story = 0;
-      const styleQuestions = ["q1", "q2", "q3", "q4"];
-      styleQuestions.forEach(q => {
-        const answer = document.querySelector(`input[name="${q}"]:checked`).value;
-        if (answer === "Visual") visual++;
-        else if (answer === "Auditory") auditory++;
-        else story++;
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(79, 209, 197, 0.5);
+        border-radius: 50%;
+        animation: float 6s infinite linear;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) scale(1);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor-glow"></div>
+    <div class="particles"></div>
+
+    <div class="toggle-container">
+      <button id="modeToggleBtn">🌗 Switch to Dark Mode</button>
+    </div>
+
+    <div class="container">
+      <h2>🧠 Personalized Learning Quiz 🧠</h2>
+      <form id="quizForm">
+        <div class="question">
+          <p>1. How do you understand things best?</p>
+          <label
+            ><input type="radio" name="q1" value="Visual" required /> By seeing
+            images or diagrams</label
+          >
+          <label
+            ><input type="radio" name="q1" value="Auditory" /> By listening to
+            explanations</label
+          >
+          <label
+            ><input type="radio" name="q1" value="Story" /> By hearing examples
+            or stories</label
+          >
+        </div>
+
+        <div class="question">
+          <p>2. How do you remember school topics?</p>
+          <label
+            ><input type="radio" name="q2" value="Visual" required /> Through
+            pictures, charts, or drawings</label
+          >
+          <label
+            ><input type="radio" name="q2" value="Auditory" /> By recalling what
+            I heard in class</label
+          >
+          <label
+            ><input type="radio" name="q2" value="Story" /> Through interesting
+            stories or real-life links</label
+          >
+        </div>
+
+        <div class="question">
+          <p>3. What helps you learn new things faster?</p>
+          <label
+            ><input type="radio" name="q3" value="Visual" required /> Clear
+            visuals or mind maps</label
+          >
+          <label
+            ><input type="radio" name="q3" value="Auditory" /> Voice
+            explanations or class discussions</label
+          >
+          <label
+            ><input type="radio" name="q3" value="Story" /> Simple stories or
+            daily-life examples</label
+          >
+        </div>
+
+        <div class="question">
+          <p>4. What kind of notes do you prefer?</p>
+          <label
+            ><input type="radio" name="q4" value="Visual" required />
+            Color-coded and with diagrams</label
+          >
+          <label
+            ><input type="radio" name="q4" value="Auditory" /> Notes I can
+            listen to or repeat out loud</label
+          >
+          <label
+            ><input type="radio" name="q4" value="Story" /> Notes that tell a
+            story or make connections</label
+          >
+        </div>
+
+        <div class="question">
+          <p>5. When learning something new, you prefer:</p>
+          <label
+            ><input type="radio" name="q5" value="E" required /> Talking and
+            sharing ideas with others</label
+          >
+          <label
+            ><input type="radio" name="q5" value="I" /> Thinking quietly by
+            yourself</label
+          >
+        </div>
+
+        <div class="question">
+          <p>6. You understand better by:</p>
+          <label
+            ><input type="radio" name="q6" value="S" required /> Noticing real
+            facts and details</label
+          >
+          <label
+            ><input type="radio" name="q6" value="N" /> Seeing big ideas and
+            future possibilities</label
+          >
+        </div>
+
+        <div class="question">
+          <p>7. You make decisions based on:</p>
+          <label
+            ><input type="radio" name="q7" value="T" required /> Logic and what
+            makes sense</label
+          >
+          <label
+            ><input type="radio" name="q7" value="F" /> Feelings and what feels
+            right to people</label
+          >
+        </div>
+
+        <div class="question">
+          <p>8. You like to:</p>
+          <label
+            ><input type="radio" name="q8" value="J" required /> Be organized
+            and plan ahead</label
+          >
+          <label
+            ><input type="radio" name="q8" value="P" /> Be flexible and keep
+            options open</label
+          >
+        </div>
+
+        <button type="submit">See My Learning Type</button>
+      </form>
+
+      <div id="result"></div>
+    </div>
+
+    <script>
+      const mbtiDescriptions = {
+        ISTJ: "You are practical, responsible, and good with details.",
+        ISFJ: "You care about others and remember small things.",
+        INFJ: "You think deeply and connect ideas with emotions.",
+        INTJ: "You are a planner and like logic and strategy.",
+        ISTP: "You like solving real problems and learning by doing.",
+        ISFP: "You are quiet, kind, and creative.",
+        INFP: "You care deeply and enjoy meaningful stories.",
+        INTP: "You are curious and love to explore ideas.",
+        ESTP: "You learn by jumping into real-world challenges.",
+        ESFP: "You learn by doing and enjoy experiences.",
+        ENFP: "You are full of ideas and learn through fun and meaning.",
+        ENTP: "You enjoy debates and thinking in new ways.",
+        ESTJ: "You like rules, steps, and structure.",
+        ESFJ: "You are warm, helpful, and learn best with others.",
+        ENFJ: "You like helping others grow and learn.",
+        ENTJ: "You are confident, goal-driven, and organized.",
+      };
+
+      const cursorGlow = document.querySelector(".cursor-glow");
+      document.addEventListener("mousemove", (e) => {
+        cursorGlow.style.left = e.clientX + "px";
+        cursorGlow.style.top = e.clientY + "px";
       });
 
-      const ei = document.querySelector('input[name="q5"]:checked').value;
-      const sn = document.querySelector('input[name="q6"]:checked').value;
-      const tf = document.querySelector('input[name="q7"]:checked').value;
-      const jp = document.querySelector('input[name="q8"]:checked').value;
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDuration = Math.random() * 3 + 3 + "s";
+        particle.style.animationDelay = Math.random() * 2 + "s";
+        document.querySelector(".particles").appendChild(particle);
 
-      const mbti = ei + sn + tf + jp;
+        setTimeout(() => {
+          particle.remove();
+        }, 6000);
+      }
 
-      let learningStyle = "";
-      if (visual >= auditory && visual >= story) learningStyle = "Visual";
-      else if (auditory >= visual && auditory >= story) learningStyle = "Auditory";
-      else learningStyle = "Story-based";
+      setInterval(createParticle, 300);
 
-      const resultDiv = document.getElementById("result");
-      resultDiv.classList.add("show");
-      resultDiv.innerHTML = `
+      document
+        .getElementById("quizForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          let visual = 0,
+            auditory = 0,
+            story = 0;
+          const styleQuestions = ["q1", "q2", "q3", "q4"];
+          styleQuestions.forEach((q) => {
+            const answer = document.querySelector(
+              `input[name="${q}"]:checked`
+            ).value;
+            if (answer === "Visual") visual++;
+            else if (answer === "Auditory") auditory++;
+            else story++;
+          });
+
+          const ei = document.querySelector('input[name="q5"]:checked').value;
+          const sn = document.querySelector('input[name="q6"]:checked').value;
+          const tf = document.querySelector('input[name="q7"]:checked').value;
+          const jp = document.querySelector('input[name="q8"]:checked').value;
+
+          const mbti = ei + sn + tf + jp;
+
+          let learningStyle = "";
+          if (visual >= auditory && visual >= story) learningStyle = "Visual";
+          else if (auditory >= visual && auditory >= story)
+            learningStyle = "Auditory";
+          else learningStyle = "Story-based";
+
+          const resultDiv = document.getElementById("result");
+          resultDiv.classList.add("show");
+          resultDiv.innerHTML = `
         <strong>🎯 Your Personalized Learning Result:</strong><br><br>
         📘 <strong>Learning Style:</strong> ${learningStyle}<br>
         🔍 <strong>Personality Type (MBTI):</strong> ${mbti}<br>
         🧠 <em>${mbtiDescriptions[mbti]}</em><br><br>
         ✅ This will help us personalize your study experience!
       `;
+        });
 
-      localStorage.setItem("learningStyle", learningStyle);
-      localStorage.setItem("mbtiType", mbti);
-    });
+      const toggleBtn = document.getElementById("modeToggleBtn");
 
-    const toggleBtn = document.getElementById("modeToggleBtn");
-
-    function updateThemeButton() {
-      if (document.body.classList.contains("dark")) {
-        toggleBtn.textContent = "☀️ Switch to Light Mode";
-      } else {
-        toggleBtn.textContent = "🌗 Switch to Dark Mode";
+      function updateThemeButton() {
+        if (document.body.classList.contains("dark")) {
+          toggleBtn.textContent = "☀️ Switch to Light Mode";
+        } else {
+          toggleBtn.textContent = "🌗 Switch to Dark Mode";
+        }
       }
-    }
 
-    if (localStorage.getItem("theme") === "dark") {
-      document.body.classList.add("dark");
-    }
-    updateThemeButton();
-
-    toggleBtn.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-      updateThemeButton();
-    });
-
-    window.addEventListener("load", () => {
-      const questions = document.querySelectorAll(".question");
-      questions.forEach((q, i) => {
-        setTimeout(() => {
-          q.classList.add("visible");
-        }, i * 150);
+      toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        updateThemeButton();
       });
-    });
-  </script>
-</body>
+
+      updateThemeButton();
+
+      window.addEventListener("load", () => {
+        const questions = document.querySelectorAll(".question");
+        questions.forEach((q, i) => {
+          setTimeout(() => {
+            q.classList.add("visible");
+          }, i * 150);
+        });
+      });
+    </script>
+  </body>
 </html>
