@@ -8,6 +8,9 @@
       :root {
         --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --visual-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --auditory-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --story-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         --card-light: rgba(255, 255, 255, 0.15);
         --card-dark: rgba(0, 0, 0, 0.3);
         --text-light: #1a202c;
@@ -32,7 +35,7 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         padding: 20px;
         min-height: 100vh;
-        transition: all 0.3s ease;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow-x: hidden;
       }
@@ -49,47 +52,49 @@
 
       .cursor-glow {
         position: fixed;
-        width: 200px;
-        height: 200px;
+        width: 300px;
+        height: 300px;
         background: radial-gradient(
           circle,
-          rgba(79, 209, 197, 0.3) 0%,
+          rgba(79, 209, 197, 0.4) 0%,
+          rgba(102, 126, 234, 0.2) 50%,
           transparent 70%
         );
         border-radius: 50%;
         pointer-events: none;
         z-index: 1;
-        transition: all 0.1s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         transform: translate(-50%, -50%);
+        filter: blur(40px);
       }
 
       .container {
         background: var(--card-light);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         padding: 40px;
-        border-radius: 25px;
+        border-radius: 30px;
         max-width: 900px;
         margin: auto;
-        box-shadow: 0 20px 40px var(--shadow-light);
+        box-shadow: 0 25px 50px var(--shadow-light);
         position: relative;
         z-index: 2;
-        transition: all 0.3s ease;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       body.dark .container {
         background: var(--card-dark);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 20px 40px var(--shadow-dark);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 25px 50px var(--shadow-dark);
       }
 
       .container:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 25px 50px var(--shadow-light);
+        transform: translateY(-8px);
+        box-shadow: 0 35px 70px var(--shadow-light);
       }
 
       body.dark .container:hover {
-        box-shadow: 0 25px 50px var(--shadow-dark);
+        box-shadow: 0 35px 70px var(--shadow-dark);
       }
 
       h2 {
@@ -99,18 +104,33 @@
         color: #2d3748;
         font-weight: 700;
         letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
       }
+
+      .learning-icon {
+        width: 40px;
+        height: 40px;
+        transition: transform 0.3s ease;
+      }
+
+      h2:hover .learning-icon {
+        transform: scale(1.2) rotate(5deg);
+      }
+
       .question {
         background: var(--question-light);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
         padding: 30px;
-        border-radius: 20px;
+        border-radius: 25px;
         margin-bottom: 25px;
         font-size: clamp(18px, 2.5vw, 22px);
         opacity: 0;
         transform: translateX(-40px);
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
         color: var(--text-light);
@@ -118,7 +138,7 @@
 
       body.dark .question {
         background: var(--question-dark);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         color: var(--text-dark);
       }
 
@@ -132,10 +152,10 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.15),
           transparent
         );
-        transition: left 0.5s ease;
+        transition: left 0.6s ease;
       }
 
       .question:hover::before {
@@ -143,8 +163,8 @@
       }
 
       .question:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 10px 30px rgba(79, 209, 197, 0.2);
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: 0 15px 40px rgba(79, 209, 197, 0.3);
         border-color: var(--accent);
       }
 
@@ -157,6 +177,15 @@
         font-weight: 600;
         margin-bottom: 20px;
         color: inherit;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .question-icon {
+        width: 30px;
+        height: 30px;
+        opacity: 0.8;
       }
 
       label {
@@ -164,31 +193,32 @@
         margin: 15px 0;
         font-size: clamp(16px, 2vw, 20px);
         cursor: pointer;
-        padding: 12px 20px;
-        border-radius: 12px;
-        transition: all 0.3s ease;
+        padding: 15px 25px;
+        border-radius: 15px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid transparent;
+        background: rgba(255, 255, 255, 0.08);
+        border: 2px solid transparent;
         color: inherit;
+        backdrop-filter: blur(10px);
       }
 
       label:hover {
-        background: rgba(79, 209, 197, 0.1);
+        background: rgba(79, 209, 197, 0.15);
         border-color: var(--accent);
-        transform: translateX(10px);
-        box-shadow: 0 5px 15px rgba(79, 209, 197, 0.2);
+        transform: translateX(15px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(79, 209, 197, 0.25);
       }
 
       input[type="radio"] {
-        margin-right: 12px;
+        margin-right: 15px;
         accent-color: var(--accent);
-        transform: scale(1.2);
+        transform: scale(1.3);
       }
 
       button {
         margin-top: 40px;
-        padding: 16px 40px;
+        padding: 18px 45px;
         font-size: clamp(18px, 2.5vw, 22px);
         background: var(--success);
         color: white;
@@ -196,10 +226,10 @@
         border-radius: 50px;
         cursor: pointer;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
       }
 
       button::before {
@@ -212,10 +242,10 @@
         background: linear-gradient(
           90deg,
           transparent,
-          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.3),
           transparent
         );
-        transition: left 0.5s ease;
+        transition: left 0.6s ease;
       }
 
       button:hover::before {
@@ -223,30 +253,65 @@
       }
 
       button:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        transform: translateY(-4px) scale(1.08);
+        box-shadow: 0 18px 50px rgba(102, 126, 234, 0.5);
       }
 
       button:active {
-        transform: translateY(-1px) scale(1.02);
+        transform: translateY(-2px) scale(1.05);
+      }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .loading-spinner {
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(79, 209, 197, 0.3);
+        border-top: 4px solid var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        color: white;
+        font-size: 20px;
+        margin-top: 20px;
+        text-align: center;
       }
 
       #result {
         margin-top: 40px;
-        padding: 30px;
+        padding: 35px;
         background: linear-gradient(
           135deg,
-          rgba(79, 209, 197, 0.2),
-          rgba(102, 126, 234, 0.2)
+          rgba(79, 209, 197, 0.25),
+          rgba(102, 126, 234, 0.25)
         );
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(79, 209, 197, 0.3);
-        border-radius: 20px;
+        backdrop-filter: blur(25px);
+        border: 2px solid rgba(79, 209, 197, 0.4);
+        border-radius: 25px;
         font-size: clamp(18px, 2.5vw, 25px);
         display: none;
         opacity: 0;
         transform: translateY(30px);
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: center;
         color: var(--text-light);
       }
@@ -257,23 +322,82 @@
 
       #result.show {
         display: block;
-        animation: bounceUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: bounceUp 1s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 1;
         transform: translateY(0);
       }
 
       @keyframes bounceUp {
         0% {
-          transform: translateY(40px) scale(0.9);
+          transform: translateY(50px) scale(0.8);
           opacity: 0;
         }
         50% {
-          transform: translateY(-10px) scale(1.05);
+          transform: translateY(-15px) scale(1.1);
           opacity: 1;
         }
         100% {
           transform: translateY(0) scale(1);
         }
+      }
+
+      .result-chart {
+        margin: 25px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .chart-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+      }
+
+      .chart-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+
+      .chart-bg {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 8;
+      }
+
+      .chart-progress {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-dasharray: 0 377;
+        animation: drawChart 2s ease-out;
+      }
+
+      @keyframes drawChart {
+        from {
+          stroke-dasharray: 0 377;
+        }
+      }
+
+      .chart-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .learning-style-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 15px;
+        display: block;
       }
 
       .toggle-container {
@@ -285,12 +409,12 @@
         font-size: 16px;
         padding: 12px 20px;
         border-radius: 25px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(15px);
         color: var(--text-light);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.4);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
         font-weight: 500;
       }
 
@@ -299,9 +423,9 @@
       }
 
       .toggle-container button:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.35);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
       }
 
       @media (max-width: 768px) {
@@ -320,18 +444,27 @@
         }
 
         label {
-          padding: 10px 15px;
+          padding: 12px 18px;
           margin: 10px 0;
         }
 
         button {
-          padding: 14px 30px;
+          padding: 16px 35px;
           margin-top: 30px;
         }
 
         #result {
-          padding: 20px;
+          padding: 25px;
           margin-top: 30px;
+        }
+
+        .result-chart {
+          gap: 20px;
+        }
+
+        .chart-container {
+          width: 120px;
+          height: 120px;
         }
       }
 
@@ -345,7 +478,12 @@
         }
 
         label {
-          padding: 8px 12px;
+          padding: 10px 15px;
+        }
+
+        .chart-container {
+          width: 100px;
+          height: 100px;
         }
       }
 
@@ -361,11 +499,17 @@
 
       .particle {
         position: absolute;
-        width: 4px;
-        height: 4px;
-        background: rgba(79, 209, 197, 0.5);
+        width: 6px;
+        height: 6px;
+        background: rgba(79, 209, 197, 0.6);
         border-radius: 50%;
-        animation: float 6s infinite linear;
+        animation: float 8s infinite linear;
+        box-shadow: 0 0 10px rgba(79, 209, 197, 0.8);
+      }
+
+      .particle.interactive {
+        animation: none;
+        transition: all 0.3s ease;
       }
 
       @keyframes float {
@@ -378,129 +522,146 @@
           opacity: 0;
         }
       }
+
+      .personality-breakdown {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 25px;
+      }
+
+      .personality-trait {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .trait-icon {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 10px;
+        display: block;
+      }
     </style>
   </head>
   <body>
     <div class="cursor-glow"></div>
     <div class="particles"></div>
+    <div class="loading-overlay">
+      <div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Analyzing your learning style...</div>
+      </div>
+    </div>
 
     <div class="toggle-container">
       <button id="modeToggleBtn">🌗 Switch to Dark Mode</button>
     </div>
 
     <div class="container">
-      <h2>🧠 Personalized Learning Quiz 🧠</h2>
+      <h2>
+        <svg class="learning-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+        </svg>
+        Personalized Learning Quiz
+        <svg class="learning-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27C12.59 16.41 11.11 17 9.5 17A6.5 6.5 0 0 1 3 10.5A6.5 6.5 0 0 1 9.5 3m0 2C7.01 5 5 7.01 5 9.5S7.01 14 9.5 14 14 11.99 14 9.5 11.99 5 9.5 5Z"/>
+        </svg>
+      </h2>
       <form id="quizForm">
         <div class="question">
-          <p>1. How do you understand things best?</p>
-          <label
-            ><input type="radio" name="q1" value="Visual" required /> By seeing
-            images or diagrams</label
-          >
-          <label
-            ><input type="radio" name="q1" value="Auditory" /> By listening to
-            explanations</label
-          >
-          <label
-            ><input type="radio" name="q1" value="Story" /> By hearing examples
-            or stories</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+            1. How do you understand things best?
+          </p>
+          <label><input type="radio" name="q1" value="Visual" required /> By seeing images or diagrams</label>
+          <label><input type="radio" name="q1" value="Auditory" /> By listening to explanations</label>
+          <label><input type="radio" name="q1" value="Story" /> By hearing examples or stories</label>
         </div>
 
         <div class="question">
-          <p>2. How do you remember school topics?</p>
-          <label
-            ><input type="radio" name="q2" value="Visual" required /> Through
-            pictures, charts, or drawings</label
-          >
-          <label
-            ><input type="radio" name="q2" value="Auditory" /> By recalling what
-            I heard in class</label
-          >
-          <label
-            ><input type="radio" name="q2" value="Story" /> Through interesting
-            stories or real-life links</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            2. How do you remember school topics?
+          </p>
+          <label><input type="radio" name="q2" value="Visual" required /> Through pictures, charts, or drawings</label>
+          <label><input type="radio" name="q2" value="Auditory" /> By recalling what I heard in class</label>
+          <label><input type="radio" name="q2" value="Story" /> Through interesting stories or real-life links</label>
         </div>
 
         <div class="question">
-          <p>3. What helps you learn new things faster?</p>
-          <label
-            ><input type="radio" name="q3" value="Visual" required /> Clear
-            visuals or mind maps</label
-          >
-          <label
-            ><input type="radio" name="q3" value="Auditory" /> Voice
-            explanations or class discussions</label
-          >
-          <label
-            ><input type="radio" name="q3" value="Story" /> Simple stories or
-            daily-life examples</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            3. What helps you learn new things faster?
+          </p>
+          <label><input type="radio" name="q3" value="Visual" required /> Clear visuals or mind maps</label>
+          <label><input type="radio" name="q3" value="Auditory" /> Voice explanations or class discussions</label>
+          <label><input type="radio" name="q3" value="Story" /> Simple stories or daily-life examples</label>
         </div>
 
         <div class="question">
-          <p>4. What kind of notes do you prefer?</p>
-          <label
-            ><input type="radio" name="q4" value="Visual" required />
-            Color-coded and with diagrams</label
-          >
-          <label
-            ><input type="radio" name="q4" value="Auditory" /> Notes I can
-            listen to or repeat out loud</label
-          >
-          <label
-            ><input type="radio" name="q4" value="Story" /> Notes that tell a
-            story or make connections</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            4. What kind of notes do you prefer?
+          </p>
+          <label><input type="radio" name="q4" value="Visual" required /> Color-coded and with diagrams</label>
+          <label><input type="radio" name="q4" value="Auditory" /> Notes I can listen to or repeat out loud</label>
+          <label><input type="radio" name="q4" value="Story" /> Notes that tell a story or make connections</label>
         </div>
 
         <div class="question">
-          <p>5. When learning something new, you prefer:</p>
-          <label
-            ><input type="radio" name="q5" value="E" required /> Talking and
-            sharing ideas with others</label
-          >
-          <label
-            ><input type="radio" name="q5" value="I" /> Thinking quietly by
-            yourself</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16.5c-.83 0-1.54.5-1.85 1.22l-1.92 5.78c-.1.3-.03.64.22.86C13.18 16.1 13.6 16 14 16c1.1 0 2 .9 2 2v4h4z"/>
+            </svg>
+            5. When learning something new, you prefer:
+          </p>
+          <label><input type="radio" name="q5" value="E" required /> Talking and sharing ideas with others</label>
+          <label><input type="radio" name="q5" value="I" /> Thinking quietly by yourself</label>
         </div>
 
         <div class="question">
-          <p>6. You understand better by:</p>
-          <label
-            ><input type="radio" name="q6" value="S" required /> Noticing real
-            facts and details</label
-          >
-          <label
-            ><input type="radio" name="q6" value="N" /> Seeing big ideas and
-            future possibilities</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+            </svg>
+            6. You understand better by:
+          </p>
+          <label><input type="radio" name="q6" value="S" required /> Noticing real facts and details</label>
+          <label><input type="radio" name="q6" value="N" /> Seeing big ideas and future possibilities</label>
         </div>
 
         <div class="question">
-          <p>7. You make decisions based on:</p>
-          <label
-            ><input type="radio" name="q7" value="T" required /> Logic and what
-            makes sense</label
-          >
-          <label
-            ><input type="radio" name="q7" value="F" /> Feelings and what feels
-            right to people</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>
+            7. You make decisions based on:
+          </p>
+          <label><input type="radio" name="q7" value="T" required /> Logic and what makes sense</label>
+          <label><input type="radio" name="q7" value="F" /> Feelings and what feels right to people</label>
         </div>
 
         <div class="question">
-          <p>8. You like to:</p>
-          <label
-            ><input type="radio" name="q8" value="J" required /> Be organized
-            and plan ahead</label
-          >
-          <label
-            ><input type="radio" name="q8" value="P" /> Be flexible and keep
-            options open</label
-          >
+          <p>
+            <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            </svg>
+            8. You like to:
+          </p>
+          <label><input type="radio" name="q8" value="J" required /> Be organized and plan ahead</label>
+          <label><input type="radio" name="q8" value="P" /> Be flexible and keep options open</label>
         </div>
 
         <button type="submit">See My Learning Type</button>
@@ -529,40 +690,181 @@
         ENTJ: "You are confident, goal-driven, and organized.",
       };
 
+      const personalityTraits = {
+        E: { name: "Extraverted", description: "Energized by interaction" },
+        I: { name: "Introverted", description: "Energized by reflection" },
+        S: { name: "Sensing", description: "Focus on facts and details" },
+        N: { name: "Intuitive", description: "Focus on patterns and possibilities" },
+        T: { name: "Thinking", description: "Make decisions with logic" },
+        F: { name: "Feeling", description: "Make decisions with values" },
+        J: { name: "Judging", description: "Prefer structure and planning" },
+        P: { name: "Perceiving", description: "Prefer flexibility and spontaneity" }
+      };
+
       const cursorGlow = document.querySelector(".cursor-glow");
+      let mouseX = 0, mouseY = 0;
+      let particles = [];
+
       document.addEventListener("mousemove", (e) => {
-        cursorGlow.style.left = e.clientX + "px";
-        cursorGlow.style.top = e.clientY + "px";
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorGlow.style.left = mouseX + "px";
+        cursorGlow.style.top = mouseY + "px";
+        
+        particles.forEach(particle => {
+          const rect = particle.getBoundingClientRect();
+          const distance = Math.sqrt(
+            Math.pow(mouseX - (rect.left + rect.width/2), 2) + 
+            Math.pow(mouseY - (rect.top + rect.height/2), 2)
+          );
+          
+          if (distance < 100) {
+            particle.classList.add('interactive');
+            const angle = Math.atan2(mouseY - (rect.top + rect.height/2), mouseX - (rect.left + rect.width/2));
+            const moveX = Math.cos(angle) * (100 - distance) * 0.5;
+            const moveY = Math.sin(angle) * (100 - distance) * 0.5;
+            particle.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.5)`;
+            particle.style.background = `rgba(79, 209, 197, ${1 - distance/100})`;
+          } else {
+            particle.classList.remove('interactive');
+            particle.style.transform = '';
+            particle.style.background = '';
+          }
+        });
       });
 
       function createParticle() {
         const particle = document.createElement("div");
         particle.className = "particle";
         particle.style.left = Math.random() * 100 + "%";
-        particle.style.animationDuration = Math.random() * 3 + 3 + "s";
+        particle.style.animationDuration = Math.random() * 4 + 4 + "s";
         particle.style.animationDelay = Math.random() * 2 + "s";
+        
+        const colors = [
+          'rgba(79, 209, 197, 0.6)',
+          'rgba(102, 126, 234, 0.6)',
+          'rgba(240, 147, 251, 0.6)',
+          'rgba(245, 87, 108, 0.6)'
+        ];
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        
         document.querySelector(".particles").appendChild(particle);
+        particles.push(particle);
 
         setTimeout(() => {
           particle.remove();
-        }, 6000);
+          particles = particles.filter(p => p !== particle);
+        }, 8000);
       }
 
-      setInterval(createParticle, 300);
+      setInterval(createParticle, 200);
 
-      document
-        .getElementById("quizForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
+      function updateBackgroundGradient() {
+        const form = document.getElementById('quizForm');
+        const formData = new FormData(form);
+        
+        let visual = 0, auditory = 0, story = 0;
+        const styleQuestions = ["q1", "q2", "q3", "q4"];
+        
+        styleQuestions.forEach((q) => {
+          const answer = formData.get(q);
+          if (answer === "Visual") visual++;
+          else if (answer === "Auditory") auditory++;
+          else if (answer === "Story") story++;
+        });
 
-          let visual = 0,
-            auditory = 0,
-            story = 0;
+        let newGradient = '';
+        if (visual > auditory && visual > story) {
+          newGradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        } else if (auditory > visual && auditory > story) {
+          newGradient = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+        } else if (story > 0) {
+          newGradient = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+        } else {
+          newGradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        }
+        
+        document.body.style.background = newGradient;
+      }
+
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', updateBackgroundGradient);
+      });
+
+      function createChart(percentage, label, color) {
+        const circumference = 2 * Math.PI * 60;
+        const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
+        
+        return `
+          <div class="chart-container">
+            <svg class="chart-svg" viewBox="0 0 120 120">
+              <circle class="chart-bg" cx="60" cy="60" r="60"/>
+              <circle class="chart-progress" cx="60" cy="60" r="60" 
+                      style="stroke: ${color}; stroke-dasharray: ${strokeDasharray};"/>
+            </svg>
+            <div class="chart-label">
+              <div style="font-size: 18px; color: ${color};">${percentage}%</div>
+              <div style="font-size: 12px; margin-top: 5px;">${label}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      function getLearningStyleIcon(style) {
+        const icons = {
+          'Visual': `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+          </svg>`,
+          'Auditory': `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>`,
+          'Story-based': `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM3 18.5V7c1.1-.35 2.3-.5 3.5-.5 1.34 0 3.13.41 4.5.99v11.5C9.63 18.41 7.84 18 6.5 18c-1.2 0-2.4.15-3.5.5z"/>
+          </svg>`
+        };
+        return icons[style] || icons['Visual'];
+      }
+
+      function getPersonalityIcon(trait) {
+        const icons = {
+          'E': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63c-.37-.89-1.27-1.37-2.17-1.37H16.5c-.83 0-1.54.5-1.85 1.22l-1.92 5.78c-.1.3-.03.64.22.86.25.22.6.1.85-.12L16 12.5V22h4z"/>
+          </svg>`,
+          'I': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+          </svg>`,
+          'S': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>`,
+          'N': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+          </svg>`,
+          'T': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>`,
+          'F': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>`,
+          'J': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+          </svg>`,
+          'P': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>`
+        };
+        return icons[trait] || icons['E'];
+      }
+
+      document.getElementById("quizForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        document.querySelector('.loading-overlay').style.display = 'flex';
+
+        setTimeout(() => {
+          let visual = 0, auditory = 0, story = 0;
           const styleQuestions = ["q1", "q2", "q3", "q4"];
           styleQuestions.forEach((q) => {
-            const answer = document.querySelector(
-              `input[name="${q}"]:checked`
-            ).value;
+            const answer = document.querySelector(`input[name="${q}"]:checked`).value;
             if (answer === "Visual") visual++;
             else if (answer === "Auditory") auditory++;
             else story++;
@@ -577,20 +879,63 @@
 
           let learningStyle = "";
           if (visual >= auditory && visual >= story) learningStyle = "Visual";
-          else if (auditory >= visual && auditory >= story)
-            learningStyle = "Auditory";
+          else if (auditory >= visual && auditory >= story) learningStyle = "Auditory";
           else learningStyle = "Story-based";
 
+          const total = visual + auditory + story;
+          const visualPercent = Math.round((visual / total) * 100);
+          const auditoryPercent = Math.round((auditory / total) * 100);
+          const storyPercent = 100 - visualPercent - auditoryPercent;
+
+          const personalityBreakdown = mbti.split('').map(trait => {
+            const info = personalityTraits[trait];
+            return `
+              <div class="personality-trait">
+                ${getPersonalityIcon(trait)}
+                <div style="font-weight: bold; margin-bottom: 5px;">${info.name}</div>
+                <div style="font-size: 14px; opacity: 0.8;">${info.description}</div>
+              </div>
+            `;
+          }).join('');
+
           const resultDiv = document.getElementById("result");
+          
+          document.querySelector('.loading-overlay').style.display = 'none';
+          
           resultDiv.classList.add("show");
           resultDiv.innerHTML = `
-        <strong>🎯 Your Personalized Learning Result:</strong><br><br>
-        📘 <strong>Learning Style:</strong> ${learningStyle}<br>
-        🔍 <strong>Personality Type (MBTI):</strong> ${mbti}<br>
-        🧠 <em>${mbtiDescriptions[mbti]}</em><br><br>
-        ✅ This will help us personalize your study experience!
-      `;
-        });
+            <strong>🎯 Your Personalized Learning Result:</strong><br><br>
+            
+            ${getLearningStyleIcon(learningStyle)}
+            
+            <div style="font-size: 28px; font-weight: bold; margin: 20px 0; color: var(--accent);">
+              ${learningStyle} Learner
+            </div>
+            
+            <div class="result-chart">
+              ${createChart(visualPercent, 'Visual', '#667eea')}
+              ${createChart(auditoryPercent, 'Auditory', '#f093fb')}
+              ${createChart(storyPercent, 'Story-based', '#4facfe')}
+            </div>
+            
+            <div style="margin: 25px 0; font-size: 22px;">
+              <strong>🔍 Personality Type (MBTI):</strong> ${mbti}
+            </div>
+            
+            <div style="font-style: italic; margin: 20px 0; font-size: 18px; opacity: 0.9;">
+              ${mbtiDescriptions[mbti]}
+            </div>
+            
+            <div class="personality-breakdown">
+              ${personalityBreakdown}
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(79, 209, 197, 0.1); border-radius: 15px; border: 1px solid rgba(79, 209, 197, 0.3);">
+              ✅ <strong>This personalized profile will help optimize your learning experience!</strong>
+            </div>
+          `;
+        }, 2000);
+      });
 
       const toggleBtn = document.getElementById("modeToggleBtn");
 
@@ -608,13 +953,12 @@
       });
 
       updateThemeButton();
-
       window.addEventListener("load", () => {
         const questions = document.querySelectorAll(".question");
         questions.forEach((q, i) => {
           setTimeout(() => {
             q.classList.add("visible");
-          }, i * 150);
+          }, i * 200);
         });
       });
     </script>
