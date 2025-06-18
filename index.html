@@ -619,7 +619,7 @@
         transform: translateY(-1px) scale(0.95);
       }
 
-@media (max-width: 768px) {
+      @media (max-width: 768px) {
         .clear-form-btn {
           bottom: 20px;
           right: 20px;
@@ -639,7 +639,7 @@
         .clear-form-btn .btn-text {
           font-size: 12px;
           opacity: 1;
-          transition: none; 
+          transition: none;
         }
 
         .clear-form-btn:hover .btn-text {
@@ -647,9 +647,10 @@
         }
 
         .clear-form-btn:hover .btn-icon {
-          transform: none; 
+          transform: none;
         }
-      }    </style>
+      }
+    </style>
   </head>
   <body>
     <div class="cursor-glow"></div>
@@ -1030,61 +1031,41 @@
         };
         return icons[trait] || icons["E"];
       }
-      document.getElementById("quizForm").addEventListener("submit", function (e) {
-  e.preventDefault(); 
+      function saveTheme() {
+        const isDark = document.body.classList.contains("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+      }
 
-  document.querySelector(".loading-overlay").style.display = "flex";
- setTimeout(() => {
-  let visual = 0,
-    auditory = 0,
-    story = 0;
+      function loadTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark");
+        }
+        updateThemeButton();
+      }
 
-  const styleQuestions = ["q1", "q2", "q3", "q4"];
-  styleQuestions.forEach((q) => {
-    const answer = document.querySelector(`input[name="${q}"]:checked`).value;
-    if (answer === "Visual") visual++;
-    else if (answer === "Auditory") auditory++;
-    else story++;
-  });
+      window.addEventListener("load", () => {
+        loadTheme();
 
-  const ei = document.querySelector('input[name="q5"]:checked').value;
-  const sn = document.querySelector('input[name="q6"]:checked').value;
-  const tf = document.querySelector('input[name="q7"]:checked').value;
-  const jp = document.querySelector('input[name="q8"]:checked').value;
+        const questions = document.querySelectorAll(".question");
+        questions.forEach((q, i) => {
+          setTimeout(() => {
+            q.classList.add("visible");
+          }, i * 200);
+        });
+      });
 
-  const mbti = ei + sn + tf + jp;
-
-  let learningStyle = "";
-  if (visual >= auditory && visual >= story) learningStyle = "Visual";
-  else if (auditory >= visual && auditory >= story) learningStyle = "Auditory";
-  else learningStyle = "Story-based";
-
-  const resultData = {
-    visual,
-    auditory,
-    story,
-    mbti,
-    learningStyle,
-  };
-
-  localStorage.setItem("quizResult", JSON.stringify(resultData));
-  window.open("result.html", "_blank");
-
-  document.querySelector(".loading-overlay").style.display = "none";
-}, 2000);
-});
-
-     /* document
+      document
         .getElementById("quizForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
 
           document.querySelector(".loading-overlay").style.display = "flex";
-
           setTimeout(() => {
             let visual = 0,
               auditory = 0,
               story = 0;
+
             const styleQuestions = ["q1", "q2", "q3", "q4"];
             styleQuestions.forEach((q) => {
               const answer = document.querySelector(
@@ -1108,74 +1089,26 @@
               learningStyle = "Auditory";
             else learningStyle = "Story-based";
 
-            const total = visual + auditory + story;
-            const visualPercent = Math.round((visual / total) * 100);
-            const auditoryPercent = Math.round((auditory / total) * 100);
-            const storyPercent = 100 - visualPercent - auditoryPercent;
+            const resultData = {
+              visual,
+              auditory,
+              story,
+              mbti,
+              learningStyle,
+            };
 
-            const personalityBreakdown = mbti
-              .split("")
-              .map((trait) => {
-                const info = personalityTraits[trait];
-                return `
-              <div class="personality-trait">
-                ${getPersonalityIcon(trait)}
-                <div style="font-weight: bold; margin-bottom: 5px;">${
-                  info.name
-                }</div>
-                <div style="font-size: 14px; opacity: 0.8;">${
-                  info.description
-                }</div>
-              </div>
-            `;
-              })
-              .join("");
-
-            const resultDiv = document.getElementById("result");
+            localStorage.setItem("quizResult", JSON.stringify(resultData));
+            window.open("result.html", "_blank");
 
             document.querySelector(".loading-overlay").style.display = "none";
-
-            resultDiv.classList.add("show");
-            resultDiv.innerHTML = `
-            <strong>🎯 Your Personalized Learning Result:</strong><br><br>
-            
-            ${getLearningStyleIcon(learningStyle)}
-            
-            <div style="font-size: 28px; font-weight: bold; margin: 20px 0; color: var(--accent);">
-              ${learningStyle} Learner
-            </div>
-            
-            <div class="result-chart">
-              ${createChart(visualPercent, "Visual", "#667eea")}
-              ${createChart(auditoryPercent, "Auditory", "#f093fb")}
-              ${createChart(storyPercent, "Story-based", "#4facfe")}
-            </div>
-            
-            <div style="margin: 25px 0; font-size: 22px;">
-              <strong>🔍 Personality Type (MBTI):</strong> ${mbti}
-            </div>
-            
-            <div style="font-style: italic; margin: 20px 0; font-size: 18px; opacity: 0.9;">
-              ${mbtiDescriptions[mbti]}
-            </div>
-            
-            <div class="personality-breakdown">
-              ${personalityBreakdown}
-            </div>
-            
-            <div style="margin-top: 30px; padding: 20px; background: rgba(79, 209, 197, 0.1); border-radius: 15px; border: 1px solid rgba(79, 209, 197, 0.3);">
-              ✅ <strong>This personalized profile will help optimize your learning experience!</strong>
-            </div>
-          `;
           }, 2000);
-        });*/
-      
+        });
 
       const toggleBtn = document.getElementById("modeToggleBtn");
 
       function updateThemeButton() {
         if (document.body.classList.contains("dark")) {
-          toggleBtn.textContent = "☀️ SwitAch to Light Mode";
+          toggleBtn.textContent = "☀️ Switch to Light Mode";
         } else {
           toggleBtn.textContent = "🌗 Switch to Dark Mode";
         }
@@ -1184,8 +1117,8 @@
       toggleBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark");
         updateThemeButton();
+        saveTheme();
       });
-
       updateThemeButton();
       window.addEventListener("load", () => {
         const questions = document.querySelectorAll(".question");
