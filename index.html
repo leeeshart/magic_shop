@@ -285,8 +285,12 @@
       }
 
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       .loading-text {
@@ -545,6 +549,97 @@
         margin: 0 auto 10px;
         display: block;
       }
+
+      .clear-form-btn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 0;
+      }
+
+      .clear-form-btn:hover {
+        width: 140px;
+        border-radius: 30px;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(255, 107, 107, 0.5);
+      }
+
+      .clear-form-btn .btn-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+
+      .clear-form-btn .btn-icon {
+        width: 24px;
+        height: 24px;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        fill: white;
+      }
+      .clear-form-btn .btn-icon svg {
+        fill: white;
+      }
+
+      .clear-form-btn .btn-text {
+        opacity: 0;
+        margin-left: 8px;
+        white-space: nowrap;
+        transition: opacity 0.3s ease 0.1s;
+        font-size: 14px;
+      }
+
+      .clear-form-btn:hover .btn-text {
+        opacity: 1;
+      }
+
+      .clear-form-btn:hover .btn-icon {
+        transform: rotate(180deg);
+      }
+
+      .clear-form-btn:active {
+        transform: translateY(-1px) scale(0.95);
+      }
+
+      @media (max-width: 768px) {
+        .clear-form-btn {
+          bottom: 20px;
+          right: 20px;
+          width: 50px;
+          height: 50px;
+        }
+
+        .clear-form-btn:hover {
+          width: 120px;
+        }
+
+        .clear-form-btn .btn-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        .clear-form-btn .btn-text {
+          font-size: 12px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -564,104 +659,184 @@
     <div class="container">
       <h2>
         <svg class="learning-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+          <path
+            d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"
+          />
         </svg>
         Personalized Learning Quiz
         <svg class="learning-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27C12.59 16.41 11.11 17 9.5 17A6.5 6.5 0 0 1 3 10.5A6.5 6.5 0 0 1 9.5 3m0 2C7.01 5 5 7.01 5 9.5S7.01 14 9.5 14 14 11.99 14 9.5 11.99 5 9.5 5Z"/>
+          <path
+            d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27C12.59 16.41 11.11 17 9.5 17A6.5 6.5 0 0 1 3 10.5A6.5 6.5 0 0 1 9.5 3m0 2C7.01 5 5 7.01 5 9.5S7.01 14 9.5 14 14 11.99 14 9.5 11.99 5 9.5 5Z"
+          />
         </svg>
       </h2>
       <form id="quizForm">
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+              />
             </svg>
             1. How do you understand things best?
           </p>
-          <label><input type="radio" name="q1" value="Visual" required /> By seeing images or diagrams</label>
-          <label><input type="radio" name="q1" value="Auditory" /> By listening to explanations</label>
-          <label><input type="radio" name="q1" value="Story" /> By hearing examples or stories</label>
+          <label
+            ><input type="radio" name="q1" value="Visual" required /> By seeing
+            images or diagrams</label
+          >
+          <label
+            ><input type="radio" name="q1" value="Auditory" /> By listening to
+            explanations</label
+          >
+          <label
+            ><input type="radio" name="q1" value="Story" /> By hearing examples
+            or stories</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              />
             </svg>
             2. How do you remember school topics?
           </p>
-          <label><input type="radio" name="q2" value="Visual" required /> Through pictures, charts, or drawings</label>
-          <label><input type="radio" name="q2" value="Auditory" /> By recalling what I heard in class</label>
-          <label><input type="radio" name="q2" value="Story" /> Through interesting stories or real-life links</label>
+          <label
+            ><input type="radio" name="q2" value="Visual" required /> Through
+            pictures, charts, or drawings</label
+          >
+          <label
+            ><input type="radio" name="q2" value="Auditory" /> By recalling what
+            I heard in class</label
+          >
+          <label
+            ><input type="radio" name="q2" value="Story" /> Through interesting
+            stories or real-life links</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+              <path
+                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+              />
             </svg>
             3. What helps you learn new things faster?
           </p>
-          <label><input type="radio" name="q3" value="Visual" required /> Clear visuals or mind maps</label>
-          <label><input type="radio" name="q3" value="Auditory" /> Voice explanations or class discussions</label>
-          <label><input type="radio" name="q3" value="Story" /> Simple stories or daily-life examples</label>
+          <label
+            ><input type="radio" name="q3" value="Visual" required /> Clear
+            visuals or mind maps</label
+          >
+          <label
+            ><input type="radio" name="q3" value="Auditory" /> Voice
+            explanations or class discussions</label
+          >
+          <label
+            ><input type="radio" name="q3" value="Story" /> Simple stories or
+            daily-life examples</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+              <path
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+              />
             </svg>
             4. What kind of notes do you prefer?
           </p>
-          <label><input type="radio" name="q4" value="Visual" required /> Color-coded and with diagrams</label>
-          <label><input type="radio" name="q4" value="Auditory" /> Notes I can listen to or repeat out loud</label>
-          <label><input type="radio" name="q4" value="Story" /> Notes that tell a story or make connections</label>
+          <label
+            ><input type="radio" name="q4" value="Visual" required />
+            Color-coded and with diagrams</label
+          >
+          <label
+            ><input type="radio" name="q4" value="Auditory" /> Notes I can
+            listen to or repeat out loud</label
+          >
+          <label
+            ><input type="radio" name="q4" value="Story" /> Notes that tell a
+            story or make connections</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16.5c-.83 0-1.54.5-1.85 1.22l-1.92 5.78c-.1.3-.03.64.22.86C13.18 16.1 13.6 16 14 16c1.1 0 2 .9 2 2v4h4z"/>
+              <path
+                d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H16.5c-.83 0-1.54.5-1.85 1.22l-1.92 5.78c-.1.3-.03.64.22.86C13.18 16.1 13.6 16 14 16c1.1 0 2 .9 2 2v4h4z"
+              />
             </svg>
             5. When learning something new, you prefer:
           </p>
-          <label><input type="radio" name="q5" value="E" required /> Talking and sharing ideas with others</label>
-          <label><input type="radio" name="q5" value="I" /> Thinking quietly by yourself</label>
+          <label
+            ><input type="radio" name="q5" value="E" required /> Talking and
+            sharing ideas with others</label
+          >
+          <label
+            ><input type="radio" name="q5" value="I" /> Thinking quietly by
+            yourself</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
+              />
             </svg>
             6. You understand better by:
           </p>
-          <label><input type="radio" name="q6" value="S" required /> Noticing real facts and details</label>
-          <label><input type="radio" name="q6" value="N" /> Seeing big ideas and future possibilities</label>
+          <label
+            ><input type="radio" name="q6" value="S" required /> Noticing real
+            facts and details</label
+          >
+          <label
+            ><input type="radio" name="q6" value="N" /> Seeing big ideas and
+            future possibilities</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+              />
             </svg>
             7. You make decisions based on:
           </p>
-          <label><input type="radio" name="q7" value="T" required /> Logic and what makes sense</label>
-          <label><input type="radio" name="q7" value="F" /> Feelings and what feels right to people</label>
+          <label
+            ><input type="radio" name="q7" value="T" required /> Logic and what
+            makes sense</label
+          >
+          <label
+            ><input type="radio" name="q7" value="F" /> Feelings and what feels
+            right to people</label
+          >
         </div>
 
         <div class="question">
           <p>
             <svg class="question-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+              <path
+                d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+              />
             </svg>
             8. You like to:
           </p>
-          <label><input type="radio" name="q8" value="J" required /> Be organized and plan ahead</label>
-          <label><input type="radio" name="q8" value="P" /> Be flexible and keep options open</label>
+          <label
+            ><input type="radio" name="q8" value="J" required /> Be organized
+            and plan ahead</label
+          >
+          <label
+            ><input type="radio" name="q8" value="P" /> Be flexible and keep
+            options open</label
+          >
         </div>
 
         <button type="submit">See My Learning Type</button>
@@ -669,7 +844,16 @@
 
       <div id="result"></div>
     </div>
-
+    <button id="clearFormBtn" class="clear-form-btn">
+      <div class="btn-content">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          />
+        </svg>
+        <span class="btn-text">Clear Form</span>
+      </div>
+    </button>
     <script>
       const mbtiDescriptions = {
         ISTJ: "You are practical, responsible, and good with details.",
@@ -694,15 +878,22 @@
         E: { name: "Extraverted", description: "Energized by interaction" },
         I: { name: "Introverted", description: "Energized by reflection" },
         S: { name: "Sensing", description: "Focus on facts and details" },
-        N: { name: "Intuitive", description: "Focus on patterns and possibilities" },
+        N: {
+          name: "Intuitive",
+          description: "Focus on patterns and possibilities",
+        },
         T: { name: "Thinking", description: "Make decisions with logic" },
         F: { name: "Feeling", description: "Make decisions with values" },
         J: { name: "Judging", description: "Prefer structure and planning" },
-        P: { name: "Perceiving", description: "Prefer flexibility and spontaneity" }
+        P: {
+          name: "Perceiving",
+          description: "Prefer flexibility and spontaneity",
+        },
       };
 
       const cursorGlow = document.querySelector(".cursor-glow");
-      let mouseX = 0, mouseY = 0;
+      let mouseX = 0,
+        mouseY = 0;
       let particles = [];
 
       document.addEventListener("mousemove", (e) => {
@@ -710,25 +901,30 @@
         mouseY = e.clientY;
         cursorGlow.style.left = mouseX + "px";
         cursorGlow.style.top = mouseY + "px";
-        
-        particles.forEach(particle => {
+
+        particles.forEach((particle) => {
           const rect = particle.getBoundingClientRect();
           const distance = Math.sqrt(
-            Math.pow(mouseX - (rect.left + rect.width/2), 2) + 
-            Math.pow(mouseY - (rect.top + rect.height/2), 2)
+            Math.pow(mouseX - (rect.left + rect.width / 2), 2) +
+              Math.pow(mouseY - (rect.top + rect.height / 2), 2)
           );
-          
+
           if (distance < 100) {
-            particle.classList.add('interactive');
-            const angle = Math.atan2(mouseY - (rect.top + rect.height/2), mouseX - (rect.left + rect.width/2));
+            particle.classList.add("interactive");
+            const angle = Math.atan2(
+              mouseY - (rect.top + rect.height / 2),
+              mouseX - (rect.left + rect.width / 2)
+            );
             const moveX = Math.cos(angle) * (100 - distance) * 0.5;
             const moveY = Math.sin(angle) * (100 - distance) * 0.5;
             particle.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.5)`;
-            particle.style.background = `rgba(79, 209, 197, ${1 - distance/100})`;
+            particle.style.background = `rgba(79, 209, 197, ${
+              1 - distance / 100
+            })`;
           } else {
-            particle.classList.remove('interactive');
-            particle.style.transform = '';
-            particle.style.background = '';
+            particle.classList.remove("interactive");
+            particle.style.transform = "";
+            particle.style.background = "";
           }
         });
       });
@@ -739,33 +935,36 @@
         particle.style.left = Math.random() * 100 + "%";
         particle.style.animationDuration = Math.random() * 4 + 4 + "s";
         particle.style.animationDelay = Math.random() * 2 + "s";
-        
+
         const colors = [
-          'rgba(79, 209, 197, 0.6)',
-          'rgba(102, 126, 234, 0.6)',
-          'rgba(240, 147, 251, 0.6)',
-          'rgba(245, 87, 108, 0.6)'
+          "rgba(79, 209, 197, 0.6)",
+          "rgba(102, 126, 234, 0.6)",
+          "rgba(240, 147, 251, 0.6)",
+          "rgba(245, 87, 108, 0.6)",
         ];
-        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-        
+        particle.style.background =
+          colors[Math.floor(Math.random() * colors.length)];
+
         document.querySelector(".particles").appendChild(particle);
         particles.push(particle);
 
         setTimeout(() => {
           particle.remove();
-          particles = particles.filter(p => p !== particle);
+          particles = particles.filter((p) => p !== particle);
         }, 8000);
       }
 
       setInterval(createParticle, 200);
 
       function updateBackgroundGradient() {
-        const form = document.getElementById('quizForm');
+        const form = document.getElementById("quizForm");
         const formData = new FormData(form);
-        
-        let visual = 0, auditory = 0, story = 0;
+
+        let visual = 0,
+          auditory = 0,
+          story = 0;
         const styleQuestions = ["q1", "q2", "q3", "q4"];
-        
+
         styleQuestions.forEach((q) => {
           const answer = formData.get(q);
           if (answer === "Visual") visual++;
@@ -773,28 +972,30 @@
           else if (answer === "Story") story++;
         });
 
-        let newGradient = '';
+        let newGradient = "";
         if (visual > auditory && visual > story) {
-          newGradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+          newGradient = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
         } else if (auditory > visual && auditory > story) {
-          newGradient = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+          newGradient = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)";
         } else if (story > 0) {
-          newGradient = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+          newGradient = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
         } else {
-          newGradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+          newGradient = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
         }
-        
+
         document.body.style.background = newGradient;
       }
 
-      document.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', updateBackgroundGradient);
+      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+        radio.addEventListener("change", updateBackgroundGradient);
       });
 
       function createChart(percentage, label, color) {
         const circumference = 2 * Math.PI * 60;
-        const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
-        
+        const strokeDasharray = `${
+          (percentage / 100) * circumference
+        } ${circumference}`;
+
         return `
           <div class="chart-container">
             <svg class="chart-svg" viewBox="0 0 120 120">
@@ -812,98 +1013,112 @@
 
       function getLearningStyleIcon(style) {
         const icons = {
-          'Visual': `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
+          Visual: `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
           </svg>`,
-          'Auditory': `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
+          Auditory: `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
           </svg>`,
-          'Story-based': `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
+          "Story-based": `<svg class="learning-style-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM3 18.5V7c1.1-.35 2.3-.5 3.5-.5 1.34 0 3.13.41 4.5.99v11.5C9.63 18.41 7.84 18 6.5 18c-1.2 0-2.4.15-3.5.5z"/>
-          </svg>`
+          </svg>`,
         };
-        return icons[style] || icons['Visual'];
+        return icons[style] || icons["Visual"];
       }
 
       function getPersonalityIcon(trait) {
         const icons = {
-          'E': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          E: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63c-.37-.89-1.27-1.37-2.17-1.37H16.5c-.83 0-1.54.5-1.85 1.22l-1.92 5.78c-.1.3-.03.64.22.86.25.22.6.1.85-.12L16 12.5V22h4z"/>
           </svg>`,
-          'I': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          I: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
           </svg>`,
-          'S': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          S: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
           </svg>`,
-          'N': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          N: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
           </svg>`,
-          'T': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          T: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
           </svg>`,
-          'F': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          F: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>`,
-          'J': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          J: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
           </svg>`,
-          'P': `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
+          P: `<svg class="trait-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>`
+          </svg>`,
         };
-        return icons[trait] || icons['E'];
+        return icons[trait] || icons["E"];
       }
 
-      document.getElementById("quizForm").addEventListener("submit", function (e) {
-        e.preventDefault();
+      document
+        .getElementById("quizForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
 
-        document.querySelector('.loading-overlay').style.display = 'flex';
+          document.querySelector(".loading-overlay").style.display = "flex";
 
-        setTimeout(() => {
-          let visual = 0, auditory = 0, story = 0;
-          const styleQuestions = ["q1", "q2", "q3", "q4"];
-          styleQuestions.forEach((q) => {
-            const answer = document.querySelector(`input[name="${q}"]:checked`).value;
-            if (answer === "Visual") visual++;
-            else if (answer === "Auditory") auditory++;
-            else story++;
-          });
+          setTimeout(() => {
+            let visual = 0,
+              auditory = 0,
+              story = 0;
+            const styleQuestions = ["q1", "q2", "q3", "q4"];
+            styleQuestions.forEach((q) => {
+              const answer = document.querySelector(
+                `input[name="${q}"]:checked`
+              ).value;
+              if (answer === "Visual") visual++;
+              else if (answer === "Auditory") auditory++;
+              else story++;
+            });
 
-          const ei = document.querySelector('input[name="q5"]:checked').value;
-          const sn = document.querySelector('input[name="q6"]:checked').value;
-          const tf = document.querySelector('input[name="q7"]:checked').value;
-          const jp = document.querySelector('input[name="q8"]:checked').value;
+            const ei = document.querySelector('input[name="q5"]:checked').value;
+            const sn = document.querySelector('input[name="q6"]:checked').value;
+            const tf = document.querySelector('input[name="q7"]:checked').value;
+            const jp = document.querySelector('input[name="q8"]:checked').value;
 
-          const mbti = ei + sn + tf + jp;
+            const mbti = ei + sn + tf + jp;
 
-          let learningStyle = "";
-          if (visual >= auditory && visual >= story) learningStyle = "Visual";
-          else if (auditory >= visual && auditory >= story) learningStyle = "Auditory";
-          else learningStyle = "Story-based";
+            let learningStyle = "";
+            if (visual >= auditory && visual >= story) learningStyle = "Visual";
+            else if (auditory >= visual && auditory >= story)
+              learningStyle = "Auditory";
+            else learningStyle = "Story-based";
 
-          const total = visual + auditory + story;
-          const visualPercent = Math.round((visual / total) * 100);
-          const auditoryPercent = Math.round((auditory / total) * 100);
-          const storyPercent = 100 - visualPercent - auditoryPercent;
+            const total = visual + auditory + story;
+            const visualPercent = Math.round((visual / total) * 100);
+            const auditoryPercent = Math.round((auditory / total) * 100);
+            const storyPercent = 100 - visualPercent - auditoryPercent;
 
-          const personalityBreakdown = mbti.split('').map(trait => {
-            const info = personalityTraits[trait];
-            return `
+            const personalityBreakdown = mbti
+              .split("")
+              .map((trait) => {
+                const info = personalityTraits[trait];
+                return `
               <div class="personality-trait">
                 ${getPersonalityIcon(trait)}
-                <div style="font-weight: bold; margin-bottom: 5px;">${info.name}</div>
-                <div style="font-size: 14px; opacity: 0.8;">${info.description}</div>
+                <div style="font-weight: bold; margin-bottom: 5px;">${
+                  info.name
+                }</div>
+                <div style="font-size: 14px; opacity: 0.8;">${
+                  info.description
+                }</div>
               </div>
             `;
-          }).join('');
+              })
+              .join("");
 
-          const resultDiv = document.getElementById("result");
-          
-          document.querySelector('.loading-overlay').style.display = 'none';
-          
-          resultDiv.classList.add("show");
-          resultDiv.innerHTML = `
+            const resultDiv = document.getElementById("result");
+
+            document.querySelector(".loading-overlay").style.display = "none";
+
+            resultDiv.classList.add("show");
+            resultDiv.innerHTML = `
             <strong>🎯 Your Personalized Learning Result:</strong><br><br>
             
             ${getLearningStyleIcon(learningStyle)}
@@ -913,9 +1128,9 @@
             </div>
             
             <div class="result-chart">
-              ${createChart(visualPercent, 'Visual', '#667eea')}
-              ${createChart(auditoryPercent, 'Auditory', '#f093fb')}
-              ${createChart(storyPercent, 'Story-based', '#4facfe')}
+              ${createChart(visualPercent, "Visual", "#667eea")}
+              ${createChart(auditoryPercent, "Auditory", "#f093fb")}
+              ${createChart(storyPercent, "Story-based", "#4facfe")}
             </div>
             
             <div style="margin: 25px 0; font-size: 22px;">
@@ -934,8 +1149,8 @@
               ✅ <strong>This personalized profile will help optimize your learning experience!</strong>
             </div>
           `;
-        }, 2000);
-      });
+          }, 2000);
+        });
 
       const toggleBtn = document.getElementById("modeToggleBtn");
 
@@ -960,6 +1175,25 @@
             q.classList.add("visible");
           }, i * 200);
         });
+      });
+
+      document.getElementById("clearFormBtn").addEventListener("click", () => {
+        document.querySelectorAll('input[type="radio"]').forEach((radio) => {
+          radio.checked = false;
+        });
+
+        const resultDiv = document.getElementById("result");
+        resultDiv.classList.remove("show");
+        resultDiv.style.display = "none";
+
+        document.body.style.background =
+          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+
+        const clearBtn = document.getElementById("clearFormBtn");
+        clearBtn.style.transform = "scale(0.9) translateY(-3px)";
+        setTimeout(() => {
+          clearBtn.style.transform = "";
+        }, 150);
       });
     </script>
   </body>
