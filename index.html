@@ -1064,8 +1064,51 @@
         };
         return icons[trait] || icons["E"];
       }
+      document.getElementById("quizForm").addEventListener("submit", function (e) {
+  e.preventDefault(); 
 
-      document
+  document.querySelector(".loading-overlay").style.display = "flex";
+ setTimeout(() => {
+  let visual = 0,
+    auditory = 0,
+    story = 0;
+
+  const styleQuestions = ["q1", "q2", "q3", "q4"];
+  styleQuestions.forEach((q) => {
+    const answer = document.querySelector(`input[name="${q}"]:checked`).value;
+    if (answer === "Visual") visual++;
+    else if (answer === "Auditory") auditory++;
+    else story++;
+  });
+
+  const ei = document.querySelector('input[name="q5"]:checked').value;
+  const sn = document.querySelector('input[name="q6"]:checked').value;
+  const tf = document.querySelector('input[name="q7"]:checked').value;
+  const jp = document.querySelector('input[name="q8"]:checked').value;
+
+  const mbti = ei + sn + tf + jp;
+
+  let learningStyle = "";
+  if (visual >= auditory && visual >= story) learningStyle = "Visual";
+  else if (auditory >= visual && auditory >= story) learningStyle = "Auditory";
+  else learningStyle = "Story-based";
+
+  const resultData = {
+    visual,
+    auditory,
+    story,
+    mbti,
+    learningStyle,
+  };
+
+  localStorage.setItem("quizResult", JSON.stringify(resultData));
+  window.open("result.html", "_blank");
+
+  document.querySelector(".loading-overlay").style.display = "none";
+}, 2000);
+});
+
+     /* document
         .getElementById("quizForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
@@ -1159,7 +1202,8 @@
             </div>
           `;
           }, 2000);
-        });
+        });*/
+      
 
       const toggleBtn = document.getElementById("modeToggleBtn");
 
