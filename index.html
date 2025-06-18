@@ -965,40 +965,6 @@
 
       setInterval(createParticle, 200);
 
-      function updateBackgroundGradient() {
-        const form = document.getElementById("quizForm");
-        const formData = new FormData(form);
-
-        let visual = 0,
-          auditory = 0,
-          story = 0;
-        const styleQuestions = ["q1", "q2", "q3", "q4"];
-
-        styleQuestions.forEach((q) => {
-          const answer = formData.get(q);
-          if (answer === "Visual") visual++;
-          else if (answer === "Auditory") auditory++;
-          else if (answer === "Story") story++;
-        });
-
-        let newGradient = "";
-        if (visual > auditory && visual > story) {
-          newGradient = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
-        } else if (auditory > visual && auditory > story) {
-          newGradient = "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)";
-        } else if (story > 0) {
-          newGradient = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
-        } else {
-          newGradient = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
-        }
-
-        document.body.style.background = newGradient;
-      }
-
-      document.querySelectorAll('input[type="radio"]').forEach((radio) => {
-        radio.addEventListener("change", updateBackgroundGradient);
-      });
-
       function createChart(percentage, label, color) {
         const circumference = 2 * Math.PI * 60;
         const strokeDasharray = `${
@@ -1209,7 +1175,7 @@
 
       function updateThemeButton() {
         if (document.body.classList.contains("dark")) {
-          toggleBtn.textContent = "☀️ Switch to Light Mode";
+          toggleBtn.textContent = "☀️ SwitAch to Light Mode";
         } else {
           toggleBtn.textContent = "🌗 Switch to Dark Mode";
         }
@@ -1238,9 +1204,6 @@
         const resultDiv = document.getElementById("result");
         resultDiv.classList.remove("show");
         resultDiv.style.display = "none";
-
-        document.body.style.background =
-          "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
 
         const clearBtn = document.getElementById("clearFormBtn");
         clearBtn.style.transform = "scale(0.9) translateY(-3px)";
