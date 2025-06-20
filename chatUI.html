@@ -5,19 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magic Shop - Personalized Learning</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
     <style>
         :root {
-            --primary: #6C5B7B;
-            --secondary: #C06C84;
-            --accent: #F67280;
-            --light: #F8B195;
-            --background: #FFFFFF;
-            --sidebar: #F7F7F8;
-            --text: #343541;
-            --text-light: #6E6E80;
-            --white: #FFFFFF;
-            --user-bubble: #F7F7F8;
-            --bot-bubble: #FFFFFF;
+            --primary: #667eea;
+            --primary-light: #764ba2;
+            --secondary: #9f7aea;
+            --accent: #f687b3;
+            --light: #d6bcfa;
+            --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --sidebar: rgba(255, 255, 255, 0.9);
+            --text: #2d3748;
+            --text-light: #4a5568;
+            --white: rgba(255, 255, 255, 0.95);
+            --user-bubble: rgba(255, 255, 255, 0.85);
+            --bot-bubble: rgba(255, 255, 255, 0.95);
+            --border: rgba(203, 213, 224, 0.5);
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --neon-pink: #ff6ec7;
+            --neon-purple: #9d4dff;
+        }
+
+        .dark-mode {
+            --primary: #9d4dff;
+            --primary-light: #ff6ec7;
+            --secondary: #6ee2ff;
+            --accent: #ff9d4d;
+            --light: #d6bcfa;
+            --background: #000000;
+            --sidebar: #111111;
+            --text: #e2e8f0;
+            --text-light: #a0aec0;
+            --white: #1a1a1a;
+            --user-bubble: #222222;
+            --bot-bubble: #1a1a1a;
+            --border: #333333;
+            --shadow: 0 4px 15px rgba(157, 77, 255, 0.2);
+            --neon-pink: #ff6ec7;
+            --neon-purple: #9d4dff;
         }
 
         * {
@@ -28,51 +56,130 @@
         }
 
         body {
-            background-color: var(--background);
+            background: var(--background);
             color: var(--text);
             height: 100vh;
             display: flex;
+            transition: all 0.5s ease;
         }
 
         .sidebar {
-            width: 260px;
+            width: 280px;
             background-color: var(--sidebar);
             height: 100vh;
-            padding: 0.5rem;
+            padding: 0.75rem;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #e5e5e6;
+            border-right: 1px solid var(--border);
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .sidebar-header {
-            padding: 0.75rem;
+            padding: 0.5rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .new-chat-btn {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #e5e5e6;
-            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
             background-color: var(--white);
             display: flex;
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            color: var(--text);
+            font-weight: 500;
         }
 
         .new-chat-btn:hover {
-            background-color: #f0f0f1;
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
         .new-chat-btn i {
             font-size: 1rem;
         }
 
+        .learning-info-sidebar {
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .learning-info-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .learning-info-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .learning-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .learning-info-item i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .learning-info-item span {
+            flex: 1;
+        }
+
+        .quiz-embed-container {
+            margin-top: 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background-color: var(--white);
+        }
+
+        .quiz-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .quiz-instructions {
+            padding: 1rem;
+            background-color: var(--user-bubble);
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .quiz-instructions strong {
+            color: var(--primary);
+        }
+
         .profile-section {
             margin-top: auto;
-            padding: 0.75rem;
-            border-top: 1px solid #e5e5e6;
+            padding: 0.75rem 0;
+            border-top: 1px solid var(--border);
         }
 
         .profile {
@@ -80,17 +187,18 @@
             align-items: center;
             gap: 0.75rem;
             padding: 0.5rem;
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .profile:hover {
-            background-color: #f0f0f1;
+            background-color: rgba(157, 77, 255, 0.1);
         }
 
         .profile-avatar {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background-color: var(--primary);
             color: var(--white);
@@ -99,11 +207,45 @@
             justify-content: center;
             font-weight: bold;
             font-size: 0.9rem;
+            flex-shrink: 0;
         }
 
         .profile-name {
             font-size: 0.9rem;
             font-weight: 500;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .theme-toggle-container {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary);
+            color: white;
         }
 
         .main-content {
@@ -112,97 +254,157 @@
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
 
         .chat-header {
-            padding: 1rem;
+            padding: 1rem 1.5rem;
             text-align: center;
-            border-bottom: 1px solid #e5e5e6;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: var(--background);
+            z-index: 10;
+        }
+
+        .mobile-menu-btn {
+            position: absolute;
+            left: 1rem;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: var(--user-bubble);
+        }
+
+        .header-content {
+            max-width: 900px;
+            width: 100%;
         }
 
         .chat-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
+            color: var(--white);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .learning-info {
             font-size: 0.8rem;
-            color: var(--text-light);
+            color: var(--white);
             margin-top: 0.25rem;
+            opacity: 0.8;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 1.5rem 1rem;
             padding-bottom: 0;
+            scroll-behavior: smooth;
         }
 
         .message {
-            padding: 1.5rem 1rem;
+            padding: 1.25rem 1rem;
             max-width: 900px;
-            margin: 0 auto;
+            margin: 0 auto 1rem;
             display: flex;
-            gap: 1.5rem;
+            gap: 1.25rem;
             line-height: 1.75;
-        }
-
-        .message-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .user-avatar {
-            background-color: var(--user-bubble);
-        }
-
-        .bot-avatar {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .message-content {
-            padding-top: 0.25rem;
+            border-radius: var(--radius-md);
+            background-color: var(--bot-bubble);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease-out;
         }
 
         .user-message {
             background-color: var(--user-bubble);
         }
 
-        .bot-message {
-            background-color: var(--bot-bubble);
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1rem;
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        .bot-avatar {
+            background-color: var(--primary-light);
+        }
+
+        .message-content {
+            padding-top: 0.25rem;
+            flex: 1;
+        }
+
+        .message-text {
+            line-height: 1.6;
+            font-size: 0.95rem;
         }
 
         .input-container {
-            padding: 1rem;
+            padding: 1.5rem;
             width: 100%;
             max-width: 900px;
             margin: 0 auto;
             position: relative;
+            background-color: transparent;
+            border-top: 1px solid var(--border);
         }
 
         .input-box {
             position: relative;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            background-color: var(--white);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(157, 77, 255, 0.2);
         }
 
         .message-input {
             width: 100%;
-            padding: 1rem 3rem 1rem 1rem;
+            padding: 1rem 4.5rem 1rem 1.25rem;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-lg);
             outline: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             resize: none;
             max-height: 200px;
             min-height: 60px;
             line-height: 1.5;
+            background-color: transparent;
+            color: var(--text);
+        }
+
+        .message-input::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
         }
 
         .input-buttons {
@@ -211,12 +413,13 @@
             bottom: 1rem;
             display: flex;
             gap: 0.5rem;
+            align-items: flex-end;
         }
 
         .input-button {
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             background: none;
             border: none;
             color: var(--text-light);
@@ -224,11 +427,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
         }
 
         .input-button:hover {
-            background-color: #f0f0f1;
-            color: var(--text);
+            background-color: var(--user-bubble);
+            color: var(--primary);
+        }
+
+        .input-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-button:disabled:hover {
+            background-color: transparent;
+            color: var(--text-light);
+        }
+
+        #send-button {
+            background-color: var(--primary);
+            color: white !important;
+            width: 44px;
+            height: 44px;
+        }
+
+        #send-button:hover {
+            background-color: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        #send-button:disabled {
+            background-color: var(--text-light);
+            opacity: 0.7;
+            transform: none;
         }
 
         .file-upload {
@@ -249,14 +482,18 @@
         .typing-indicator {
             display: flex;
             gap: 0.5rem;
-            padding: 1rem 1rem 1rem 4.5rem;
+            padding: 1rem 1rem 1rem 5rem;
             max-width: 900px;
-            margin: 0 auto;
+            margin: 0 auto 1rem;
+            background-color: var(--bot-bubble);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow);
+            width: fit-content;
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background-color: var(--text-light);
             border-radius: 50%;
             animation: typingAnimation 1.4s infinite ease-in-out;
@@ -282,17 +519,20 @@
         .file-preview {
             display: flex;
             align-items: center;
-            padding: 0.75rem;
+            padding: 0.75rem 1rem;
             background-color: var(--user-bubble);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
             max-width: 900px;
-            margin: 0 auto 0.5rem;
+            margin: 0 auto 0.75rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
         }
 
         .file-preview i {
             margin-right: 0.75rem;
             color: var(--primary);
+            font-size: 1.1rem;
         }
 
         .file-preview-name {
@@ -301,94 +541,494 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .remove-file {
             margin-left: 0.75rem;
             color: var(--text-light);
             cursor: pointer;
+            transition: color 0.2s ease;
+            font-size: 1rem;
         }
 
-        .quiz-link {
-            color: var(--primary);
-            text-decoration: none;
+        .remove-file:hover {
+            color: var(--accent);
+        }
+
+        /* Document preview styles */
+        .document-preview-container {
+            margin: 1rem 0;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .document-preview-header {
+            padding: 0.75rem 1rem;
+            background-color: var(--user-bubble);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
             font-weight: 500;
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
         }
 
-        .quiz-link:hover {
-            background-color: rgba(108, 91, 123, 0.1);
+        .document-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .document-action {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .document-action:hover {
+            background-color: rgba(157, 77, 255, 0.1);
+        }
+
+        .pdf-container {
+            width: 100%;
+            height: 500px;
+            background-color: var(--user-bubble);
+            overflow-y: auto;
+            position: relative;
+            padding: 1rem;
+        }
+
+        .pdf-page {
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-color: white;
+            position: relative;
+        }
+
+        .pdf-page-number {
+            position: absolute;
+            bottom: -1.5rem;
+            left: 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 500px;
+            display: block;
+            margin: 0 auto;
+            border-radius: var(--radius-sm);
+        }
+
+        .unsupported-file {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+            background-color: var(--user-bubble);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+        }
+
+        .document-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .document-option {
+            background-color: var(--user-bubble);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .document-option:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Name change modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-button.primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .modal-button.secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .modal-button:hover {
+            opacity: 0.9;
         }
 
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: var(--sidebar);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
+            background: var(--primary);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
+            background: var(--primary-light);
         }
 
+        /* Loading animation */
+        .loading-animation {
+            display: inline-block;
+            position: relative;
+            width: 20px;
+            height: 20px;
+        }
+
+        .loading-animation div {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: loadingAnimation 1.2s linear infinite;
+        }
+
+        .loading-animation div:nth-child(1) {
+            animation-delay: 0s;
+            top: 8px;
+            left: 2px;
+        }
+
+        .loading-animation div:nth-child(2) {
+            animation-delay: -0.4s;
+            top: 4px;
+            left: 4px;
+        }
+
+        .loading-animation div:nth-child(3) {
+            animation-delay: -0.8s;
+            top: 2px;
+            left: 8px;
+        }
+
+        .loading-animation div:nth-child(4) {
+            animation-delay: -0.4s;
+            top: 4px;
+            left: 12px;
+        }
+
+        .loading-animation div:nth-child(5) {
+            animation-delay: -0.8s;
+            top: 8px;
+            left: 14px;
+        }
+
+        .loading-animation div:nth-child(6) {
+            animation-delay: -1.2s;
+            top: 12px;
+            left: 12px;
+        }
+
+        .loading-animation div:nth-child(7) {
+            animation-delay: -1.6s;
+            top: 14px;
+            left: 8px;
+        }
+
+        .loading-animation div:nth-child(8) {
+            animation-delay: -2s;
+            top: 12px;
+            left: 4px;
+        }
+
+        @keyframes loadingAnimation {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--text);
+            color: var(--background);
+            text-align: center;
+            border-radius: var(--radius-sm);
+            padding: 0.25rem 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Mobile styles */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
                 top: 0;
                 left: 0;
                 bottom: 0;
-                z-index: 100;
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                width: 280px;
             }
 
             .sidebar.active {
                 transform: translateX(0);
+                box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .chat-header {
+                padding: 1rem;
+            }
+
+            .chat-messages {
+                padding: 1rem 0.75rem;
             }
 
             .message {
-                padding: 1.25rem 1rem;
-                gap: 1rem;
+                padding: 1rem 0.75rem;
+                gap: 0.75rem;
+                margin-bottom: 0.75rem;
             }
 
             .message-avatar {
-                width: 32px;
-                height: 32px;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
             }
+
+            .input-container {
+                padding: 1rem;
+            }
+
+            .message-input {
+                padding: 0.75rem 3.5rem 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .input-buttons {
+                right: 0.75rem;
+                bottom: 0.75rem;
+            }
+
+            .input-button {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            #send-button {
+                width: 40px;
+                height: 40px;
+            }
+
+            .pdf-container {
+                height: 400px;
+                padding: 0.5rem;
+            }
+
+            .typing-indicator {
+                padding: 0.75rem 0.75rem 0.75rem 4.5rem;
+            }
+        }
+
+        /* Animation for new messages */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Neon effects for dark mode */
+        .dark-mode .chat-title,
+        .dark-mode .learning-info {
+            text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-pink);
+        }
+
+        .dark-mode .bot-avatar {
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+
+        .dark-mode .user-avatar {
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .dark-mode .document-action:hover,
+        .dark-mode .document-option:hover {
+            text-shadow: 0 0 5px white;
         }
     </style>
 </head>
 <body>
+    <div class="theme-toggle-container">
+        <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <button class="new-chat-btn">
+            <button class="new-chat-btn" id="new-chat-btn">
                 <i class="fas fa-plus"></i>
                 <span>New chat</span>
             </button>
+
+            <div class="learning-info-sidebar">
+                <div class="learning-info-title">Learning Profile</div>
+                <div class="learning-info-content">
+                    <div class="learning-info-item">
+                        <i class="fas fa-eye"></i>
+                        <span>Visual Learner</span>
+                    </div>
+                    <div class="learning-info-item">
+                        <i class="fas fa-brain"></i>
+                        <span id="personality-display">INTP Personality</span>
+                    </div>
+                    <div class="learning-info-item">
+                        <i class="fas fa-magic"></i>
+                        <span>Adaptive Teaching</span>
+                    </div>
+                </div>
+                
+                <div class="quiz-embed-container">
+                    <iframe src="https://leeeshart.github.io/magic_shop/" class="quiz-iframe" title="Learning Style Quiz"></iframe>
+                    <div class="quiz-instructions">
+                        <strong>After completing the quiz:</strong><br>
+                        1. Note your personality type (e.g., INTP)<br>
+                        2. Close this quiz<br>
+                        3. Type your result in chat<br>
+                        4. I'll update your learning profile
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="profile-section">
-            <div class="profile">
-                <div class="profile-avatar">JS</div>
-                <div class="profile-name">John Student</div>
+            <div class="profile" id="profile-btn">
+                <div class="profile-avatar" id="user-avatar">JS</div>
+                <div class="profile-name" id="user-name">John Student</div>
             </div>
         </div>
     </div>
 
     <div class="main-content">
         <div class="chat-header">
-            <div class="chat-title">Magic Shop</div>
-            <div class="learning-info">Visual Learner • INTP Personality</div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-content">
+                <div class="chat-title">Magic Shop</div>
+                <div class="learning-info">Your Personalized Learning Assistant</div>
+            </div>
         </div>
 
         <div class="chat-messages" id="chat-messages">
@@ -397,13 +1037,15 @@
                     <i class="fas fa-hat-wizard"></i>
                 </div>
                 <div class="message-content">
-                    Welcome to Magic Shop, John! 🎩✨<br><br>
-                    I'm your personalized learning assistant, here to help you learn in the way that works best for you. 
-                    As a visual learner with an INTP personality, I'll adapt my teaching style to match your preferences.<br><br>
-                    You can upload study materials, ask questions, or request summaries in formats that work best for you.
-                    <a href="result.html" class="quiz-link">
-                        <i class="fas fa-redo"></i> Retake learning style quiz
-                    </a>
+                    <div class="message-text">
+                        Welcome to Magic Shop! 🎩✨<br><br>
+                        I'm your personalized learning assistant. Here's what you can do:<br>
+                        - Upload study materials (PDFs, images, docs)<br>
+                        - Take the learning style quiz in the sidebar<br>
+                        - Type your personality type from the quiz to update your profile<br>
+                        - Click your profile to change your name<br><br>
+                        How can I help you learn today?
+                    </div>
                 </div>
             </div>
         </div>
@@ -413,16 +1055,17 @@
                 <div class="file-preview" id="file-preview" style="display: none;">
                     <i class="fas fa-file-alt"></i>
                     <div class="file-preview-name" id="file-name"></div>
-                    <div class="remove-file" id="remove-file">
+                    <div class="remove-file" id="remove-file" title="Remove file">
                         <i class="fas fa-times"></i>
                     </div>
                 </div>
                 <textarea class="message-input" id="message-input" placeholder="Message Magic Shop..." rows="1"></textarea>
                 <div class="input-buttons">
-                    <div class="file-upload">
-                        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt,.pptx,.ppt">
+                    <div class="file-upload tooltip">
+                        <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt,.pptx,.ppt,.jpg,.jpeg,.png,.gif">
                         <button class="input-button" title="Upload file">
                             <i class="fas fa-paperclip"></i>
+                            <span class="tooltiptext">Upload document</span>
                         </button>
                     </div>
                     <button class="input-button" id="send-button" title="Send message" disabled>
@@ -433,9 +1076,26 @@
         </div>
     </div>
 
+    <!-- Name Change Modal -->
+    <div class="modal-overlay" id="name-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Change Your Name</h3>
+            <input type="text" class="modal-input" id="name-input" placeholder="Enter your new name">
+            <div class="modal-buttons">
+                <button class="modal-button secondary" id="cancel-name">Cancel</button>
+                <button class="modal-button primary" id="save-name">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const newChatBtn = document.getElementById('new-chat-btn');
             const messageInput = document.getElementById('message-input');
             const sendButton = document.getElementById('send-button');
             const chatMessages = document.getElementById('chat-messages');
@@ -443,54 +1103,225 @@
             const filePreview = document.getElementById('file-preview');
             const fileName = document.getElementById('file-name');
             const removeFile = document.getElementById('remove-file');
+            const themeToggle = document.getElementById('theme-toggle');
+            const profileBtn = document.getElementById('profile-btn');
+            const userName = document.getElementById('user-name');
+            const userAvatar = document.getElementById('user-avatar');
+            const nameModal = document.getElementById('name-modal');
+            const nameInput = document.getElementById('name-input');
+            const saveNameBtn = document.getElementById('save-name');
+            const cancelNameBtn = document.getElementById('cancel-name');
+            const personalityDisplay = document.getElementById('personality-display');
 
-            // Auto-resize textarea
-            messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
-                sendButton.disabled = this.value.trim() === '' && !fileInput.files[0];
-            });
+            // Current chat state
+            let currentChat = [];
+            let isProcessing = false;
 
-            // File input handling
-            fileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    fileName.textContent = this.files[0].name;
-                    filePreview.style.display = 'flex';
-                    sendButton.disabled = messageInput.value.trim() === '';
-                    scrollToBottom();
+            // Initialize the app
+            function init() {
+                loadThemePreference();
+                loadUserProfile();
+                setupEventListeners();
+                restoreChatHistory();
+            }
+
+            // Set up all event listeners
+            function setupEventListeners() {
+                // Toggle mobile menu
+                mobileMenuBtn.addEventListener('click', toggleSidebar);
+
+                // New chat button
+                newChatBtn.addEventListener('click', startNewChat);
+
+                // Theme toggle
+                themeToggle.addEventListener('click', toggleTheme);
+
+                // Auto-resize textarea
+                messageInput.addEventListener('input', function() {
+                    autoResizeTextarea(this);
+                    updateSendButtonState();
+                });
+
+                // File input handling
+                fileInput.addEventListener('change', handleFileUpload);
+
+                // Remove file
+                removeFile.addEventListener('click', removeUploadedFile);
+
+                // Send message
+                sendButton.addEventListener('click', sendMessage);
+                messageInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+
+                // Profile/name change
+                profileBtn.addEventListener('click', showNameModal);
+                saveNameBtn.addEventListener('click', saveUserName);
+                cancelNameBtn.addEventListener('click', hideNameModal);
+
+                // Close sidebar when clicking outside on mobile
+                document.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768 && 
+                        !sidebar.contains(e.target) && 
+                        e.target !== mobileMenuBtn) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+
+                // Handle window resize
+                window.addEventListener('resize', handleWindowResize);
+            }
+
+            // Toggle sidebar visibility on mobile
+            function toggleSidebar() {
+                sidebar.classList.toggle('active');
+            }
+
+            // Start a new chat session
+            function startNewChat() {
+                if (currentChat.length > 0) {
+                    const confirmNew = confirm("Start a new chat? Your current chat will be saved.");
+                    if (!confirmNew) return;
                 }
-            });
-
-            // Remove file
-            removeFile.addEventListener('click', function() {
+                
+                saveCurrentChat();
+                currentChat = [];
+                chatMessages.innerHTML = '';
+                
+                // Add welcome message
+                addMessage(
+                    `Welcome back to Magic Shop! 🎩✨<br><br>
+                    What would you like to learn about today? You can:<br>
+                    - Upload study materials<br>
+                    - Ask specific questions<br>
+                    - Request visual summaries<br><br>
+                    Remember, I'll adapt to your visual learning style.`,
+                    'bot'
+                );
+                
+                // Reset file input
                 fileInput.value = '';
                 filePreview.style.display = 'none';
-                sendButton.disabled = messageInput.value.trim() === '';
-            });
+                messageInput.value = '';
+                autoResizeTextarea(messageInput);
+                updateSendButtonState();
+            }
 
-            // Send message
-            sendButton.addEventListener('click', sendMessage);
-            messageInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
+            // Toggle between light and dark theme
+            function toggleTheme() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                
+                // Save preference to localStorage
+                localStorage.setItem('darkMode', isDark);
+            }
+
+            // Load theme preference from localStorage
+            function loadThemePreference() {
+                if (localStorage.getItem('darkMode') === 'true') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
                 }
-            });
+            }
 
+            // Load user profile from localStorage
+            function loadUserProfile() {
+                const savedName = localStorage.getItem('userName');
+                const savedPersonality = localStorage.getItem('userPersonality');
+                
+                if (savedName) {
+                    userName.textContent = savedName;
+                    userAvatar.textContent = getInitials(savedName);
+                }
+                
+                if (savedPersonality) {
+                    personalityDisplay.textContent = `${savedPersonality} Personality`;
+                }
+            }
+
+            // Get initials from name
+            function getInitials(name) {
+                return name.split(' ').map(part => part[0]).join('').substring(0, 2).toUpperCase();
+            }
+
+            // Show name change modal
+            function showNameModal() {
+                nameInput.value = userName.textContent;
+                nameModal.classList.add('active');
+            }
+
+            // Hide name change modal
+            function hideNameModal() {
+                nameModal.classList.remove('active');
+            }
+
+            // Save user name
+            function saveUserName() {
+                const newName = nameInput.value.trim();
+                if (newName) {
+                    userName.textContent = newName;
+                    userAvatar.textContent = getInitials(newName);
+                    localStorage.setItem('userName', newName);
+                    hideNameModal();
+                    
+                    // Add confirmation message
+                    addMessage(`Your name has been updated to ${newName}.`, 'bot');
+                    currentChat.push({ role: 'bot', content: `Your name has been updated to ${newName}.` });
+                }
+            }
+
+            // Auto-resize textarea based on content
+            function autoResizeTextarea(textarea) {
+                textarea.style.height = 'auto';
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+
+            // Update send button state based on input
+            function updateSendButtonState() {
+                sendButton.disabled = messageInput.value.trim() === '' && !fileInput.files[0];
+            }
+
+            // Handle file upload
+            function handleFileUpload() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+                    fileName.textContent = file.name;
+                    filePreview.style.display = 'flex';
+                    updateSendButtonState();
+                    scrollToBottom();
+                }
+            }
+
+            // Remove uploaded file
+            function removeUploadedFile() {
+                fileInput.value = '';
+                filePreview.style.display = 'none';
+                updateSendButtonState();
+            }
+
+            // Send message to chat
             function sendMessage() {
                 const messageText = messageInput.value.trim();
                 const file = fileInput.files[0];
                 
-                if (messageText === '' && !file) return;
+                if ((messageText === '' && !file) || isProcessing) return;
+
+                isProcessing = true;
 
                 // Add user message to chat
                 if (messageText !== '') {
                     addMessage(messageText, 'user');
+                    currentChat.push({ role: 'user', content: messageText });
                 }
 
                 // Handle file upload
                 if (file) {
                     addFileMessage(file.name);
+                    currentChat.push({ role: 'user', content: `[File: ${file.name}]` });
                     fileInput.value = '';
                     filePreview.style.display = 'none';
                 }
@@ -506,12 +1337,28 @@
                 // Simulate bot response after delay
                 setTimeout(() => {
                     removeTypingIndicator();
-                    const botResponse = generateBotResponse(messageText, file ? file.name : null);
-                    addMessage(botResponse, 'bot');
+                    const botResponse = generateBotResponse(messageText, file ? file : null);
+                    addMessage(botResponse.content, 'bot', botResponse.options);
+                    currentChat.push({ role: 'bot', content: botResponse.content });
+                    
+                    // If there was a file, handle special processing
+                    if (file) {
+                        handleFileProcessing(file);
+                    }
+                    
+                    // Check if message is a personality type
+                    if (/^[A-Z]{3,4}$/.test(messageText.trim())) {
+                        const personalityType = messageText.trim().toUpperCase();
+                        personalityDisplay.textContent = `${personalityType} Personality`;
+                        localStorage.setItem('userPersonality', personalityType);
+                    }
+                    
+                    isProcessing = false;
                 }, 1500);
             }
 
-            function addMessage(text, sender) {
+            // Add message to chat UI
+            function addMessage(text, sender, options = {}) {
                 const messageDiv = document.createElement('div');
                 messageDiv.classList.add('message');
                 messageDiv.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
@@ -521,22 +1368,33 @@
                 avatarDiv.classList.add(sender === 'user' ? 'user-avatar' : 'bot-avatar');
                 
                 if (sender === 'user') {
-                    avatarDiv.textContent = 'You';
+                    avatarDiv.textContent = getInitials(userName.textContent);
                 } else {
                     avatarDiv.innerHTML = '<i class="fas fa-hat-wizard"></i>';
                 }
                 
                 const contentDiv = document.createElement('div');
                 contentDiv.classList.add('message-content');
-                contentDiv.innerHTML = text;
                 
-                // Add retake quiz link to first bot message
-                if (sender === 'bot' && document.querySelectorAll('.bot-message').length === 0) {
-                    const quizLink = document.createElement('a');
-                    quizLink.href = 'result.html';
-                    quizLink.className = 'quiz-link';
-                    quizLink.innerHTML = '<i class="fas fa-redo"></i> Retake learning style quiz';
-                    contentDiv.appendChild(quizLink);
+                const textDiv = document.createElement('div');
+                textDiv.classList.add('message-text');
+                textDiv.innerHTML = text;
+                contentDiv.appendChild(textDiv);
+                
+                // Add any additional options (like document actions)
+                if (options.documentOptions) {
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('document-options');
+                    
+                    options.documentOptions.forEach(option => {
+                        const optionBtn = document.createElement('div');
+                        optionBtn.classList.add('document-option');
+                        optionBtn.textContent = option.text;
+                        optionBtn.addEventListener('click', option.action);
+                        optionsDiv.appendChild(optionBtn);
+                    });
+                    
+                    contentDiv.appendChild(optionsDiv);
                 }
                 
                 messageDiv.appendChild(avatarDiv);
@@ -546,12 +1404,26 @@
                 scrollToBottom();
             }
 
+            // Add file message to chat UI
             function addFileMessage(filename) {
                 const fileDiv = document.createElement('div');
                 fileDiv.classList.add('file-preview');
                 
+                const ext = filename.split('.').pop().toLowerCase();
+                let icon = 'fa-file-alt';
+                
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                    icon = 'fa-file-image';
+                } else if (ext === 'pdf') {
+                    icon = 'fa-file-pdf';
+                } else if (['doc', 'docx'].includes(ext)) {
+                    icon = 'fa-file-word';
+                } else if (['ppt', 'pptx'].includes(ext)) {
+                    icon = 'fa-file-powerpoint';
+                }
+                
                 fileDiv.innerHTML = `
-                    <i class="fas fa-file-alt"></i>
+                    <i class="fas ${icon}"></i>
                     <div class="file-preview-name">${filename}</div>
                 `;
                 
@@ -559,6 +1431,7 @@
                 scrollToBottom();
             }
 
+            // Show typing indicator
             function showTypingIndicator() {
                 const typingDiv = document.createElement('div');
                 typingDiv.classList.add('typing-indicator');
@@ -574,6 +1447,7 @@
                 scrollToBottom();
             }
 
+            // Remove typing indicator
             function removeTypingIndicator() {
                 const typingIndicator = document.getElementById('typing-indicator');
                 if (typingIndicator) {
@@ -581,44 +1455,314 @@
                 }
             }
 
+            // Scroll chat to bottom
             function scrollToBottom() {
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            function generateBotResponse(userMessage, filename) {
-                if (filename) {
-                    const ext = filename.split('.').pop().toLowerCase();
-                    return `I've received your ${ext.toUpperCase()} file "${filename}". As a visual learner, I'll create a mind map summary for you. Here's what I've generated...<br><br>
-                    <div style="background-color: #f7f7f8; padding: 1rem; border-radius: 8px; border: 1px dashed #e5e5e6; text-align: center;">
-                        [Visual Mind Map Would Appear Here]
-                    </div>`;
+            // Generate bot response based on user input
+            function generateBotResponse(userMessage, file) {
+                if (file) {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+                    
+                    // PDF file
+                    if (ext === 'pdf') {
+                        return {
+                            content: `I've processed your PDF file "${file.name}" (${fileSize} MB). Here's what I can do with it:<br><br>
+                            <div class="document-preview-container">
+                                <div class="document-preview-header">
+                                    <span>${file.name}</span>
+                                    <div class="document-actions">
+                                        <button class="document-action" onclick="alert('Summary feature will be implemented')">
+                                            <i class="fas fa-scroll"></i> Summary
+                                        </button>
+                                        <button class="document-action" onclick="alert('Mind map feature will be implemented')">
+                                            <i class="fas fa-project-diagram"></i> Mind Map
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="pdf-container" id="pdf-preview"></div>
+                            </div>`,
+                            options: {
+                                documentOptions: [
+                                    {
+                                        text: "📝 Extract Key Points",
+                                        action: () => alert("This would extract key points from the document")
+                                    },
+                                    {
+                                        text: "🧠 Generate Quiz",
+                                        action: () => alert("This would generate a quiz based on the document")
+                                    },
+                                    {
+                                        text: "📊 Visual Summary",
+                                        action: () => alert("This would create a visual summary")
+                                    }
+                                ]
+                            }
+                        };
+                    }
+                    // Image file
+                    else if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                        return {
+                            content: `I've received your image "${file.name}" (${fileSize} MB). Here's the preview:<br><br>
+                            <div class="document-preview-container">
+                                <div class="document-preview-header">
+                                    <span>${file.name}</span>
+                                    <div class="document-actions">
+                                        <button class="document-action" onclick="alert('Image analysis will be implemented')">
+                                            <i class="fas fa-search"></i> Analyze
+                                        </button>
+                                        <button class="document-action" onclick="alert('Text extraction will be implemented')">
+                                            <i class="fas fa-font"></i> Extract Text
+                                        </button>
+                                    </div>
+                                </div>
+                                <img src="${URL.createObjectURL(file)}" class="image-preview" alt="Uploaded image">
+                            </div>
+                            <p>I can analyze this image, extract text (if any), or explain the visual content. How would you like me to help with this?</p>`,
+                            options: {
+                                documentOptions: [
+                                    {
+                                        text: "🔍 Analyze Image",
+                                        action: () => alert("This would analyze the image content")
+                                    },
+                                    {
+                                        text: "📝 Extract Text",
+                                        action: () => alert("This would extract text from the image")
+                                    },
+                                    {
+                                        text: "🗣️ Describe Visually",
+                                        action: () => alert("This would describe the image for visual learners")
+                                    }
+                                ]
+                            }
+                        };
+                    }
+                    // Other document types
+                    else {
+                        return {
+                            content: `I've received your ${ext.toUpperCase()} file "${file.name}" (${fileSize} MB). While I can't preview this format directly, I can:<br><br>
+                            <ul>
+                                <li>Extract and summarize text content</li>
+                                <li>Generate visual representations of the information</li>
+                                <li>Create study guides based on the content</li>
+                            </ul>
+                            <p>Would you like me to process this document for you?</p>`,
+                            options: {
+                                documentOptions: [
+                                    {
+                                        text: "📄 Extract Text",
+                                        action: () => alert("This would extract text from the document")
+                                    },
+                                    {
+                                        text: "📊 Visual Summary",
+                                        action: () => alert("This would create a visual summary")
+                                    },
+                                    {
+                                        text: "📚 Study Guide",
+                                        action: () => alert("This would generate a study guide")
+                                    }
+                                ]
+                            }
+                        };
+                    }
                 }
                 
-                if (userMessage.toLowerCase().includes('hello') || userMessage.toLowerCase().includes('hi')) {
-                    return "Hello again! What would you like to learn about today?";
-                } else if (userMessage.toLowerCase().includes('thank')) {
-                    return "You're welcome! Is there anything else I can help you with?";
-                } else if (userMessage.toLowerCase().includes('water cycle')) {
-                    return `Here's a visual explanation of the water cycle for you:<br><br>
-                    <div style="background-color: #f7f7f8; padding: 1rem; border-radius: 8px; border: 1px dashed #e5e5e6; text-align: center;">
-                        [Visual Diagram of Water Cycle]
-                    </div><br>
-                    The water cycle shows how water evaporates from the Earth's surface, forms clouds, and returns as precipitation.`;
-                } else {
-                    return "That's an interesting question! Since you're a visual learner, I can provide diagrams or visual aids to help explain this concept. Would you like me to prepare some visual materials?";
+                // Handle personality type input
+                if (/^[A-Z]{3,4}$/.test(userMessage.trim())) {
+                    const personalityType = userMessage.trim().toUpperCase();
+                    return {
+                        content: `✅ Your personality type has been updated to <strong>${personalityType}</strong>. I'll now adapt my teaching style to match your ${personalityType} personality characteristics.`,
+                        options: {}
+                    };
+                }
+                
+                // Handle text messages
+                if (!userMessage) {
+                    return {
+                        content: "How can I assist you with your learning today?",
+                        options: {}
+                    };
+                }
+                
+                const lowerMessage = userMessage.toLowerCase();
+                
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+                    return {
+                        content: "Hello again! What would you like to learn about today? I can provide visual explanations, diagrams, or summaries tailored to your learning style.",
+                        options: {}
+                    };
+                } 
+                else if (lowerMessage.includes('thank')) {
+                    return {
+                        content: "You're welcome! Is there anything else I can help you with? Remember, as a visual learner, you can ask for diagrams, mind maps, or other visual aids.",
+                        options: {}
+                    };
+                } 
+                else if (lowerMessage.includes('water cycle')) {
+                    return {
+                        content: `Here's a visual explanation of the water cycle tailored for visual learners:<br><br>
+                        <div class="document-preview-container">
+                            <div class="document-preview-header">
+                                <span>Water Cycle Diagram</span>
+                            </div>
+                            <div style="padding: 1rem; text-align: center; background-color: var(--user-bubble);">
+                                [Visual Diagram of Water Cycle with arrows showing evaporation, condensation, precipitation, and collection]
+                            </div>
+                        </div>
+                        <p>The water cycle shows how water evaporates from the Earth's surface, forms clouds through condensation, and returns as precipitation. Would you like me to explain any part in more detail or provide additional visual aids?</p>`,
+                        options: {
+                            documentOptions: [
+                                {
+                                    text: "🌧️ Precipitation Details",
+                                    action: () => alert("This would explain precipitation in detail")
+                                },
+                                {
+                                    text: "☁️ Condensation Process",
+                                    action: () => alert("This would explain condensation")
+                                },
+                                {
+                                    text: "📥 Download Diagram",
+                                    action: () => alert("This would download the diagram")
+                                }
+                            ]
+                        }
+                    };
+                } 
+                else {
+                    return {
+                        content: "That's an interesting topic! As a visual learner, I can provide you with:<br><br>" +
+                                "1. Diagrams and infographics<br>" +
+                                "2. Mind maps<br>" +
+                                "3. Color-coded summaries<br>" +
+                                "4. Animated explanations<br><br>" +
+                                "Which format would you prefer for this concept?",
+                        options: {
+                            documentOptions: [
+                                {
+                                    text: "📊 Diagram",
+                                    action: () => alert("This would generate a diagram")
+                                },
+                                {
+                                    text: "🧠 Mind Map",
+                                    action: () => alert("This would create a mind map")
+                                },
+                                {
+                                    text: "🎨 Color Summary",
+                                    action: () => alert("This would make a color-coded summary")
+                                }
+                            ]
+                        }
+                    };
                 }
             }
 
-            // Mobile menu toggle (would be implemented with a button in real app)
-            function setupMobileMenu() {
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.add('mobile');
+            // Handle file processing after upload
+            function handleFileProcessing(file) {
+                const ext = file.name.split('.').pop().toLowerCase();
+                
+                // Render PDF if PDF file
+                if (ext === 'pdf') {
+                    const pdfUrl = URL.createObjectURL(file);
+                    renderPDF(pdfUrl, 'pdf-preview');
                 }
             }
 
-            window.addEventListener('resize', setupMobileMenu);
-            setupMobileMenu();
+            // Render PDF document
+            function renderPDF(url, containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                container.innerHTML = '<div style="padding: 1rem; text-align: center;"><div class="loading-animation"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><p>Loading PDF preview...</p></div>';
+                
+                // Asynchronous PDF rendering
+                setTimeout(() => {
+                    pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                        container.innerHTML = '';
+                        
+                        // Render each page
+                        for (let i = 1; i <= Math.min(pdf.numPages, 3); i++) { // Limit to 3 pages for demo
+                            pdf.getPage(i).then(function(page) {
+                                const viewport = page.getViewport({ scale: 1.0 });
+                                const canvas = document.createElement('canvas');
+                                const context = canvas.getContext('2d');
+                                canvas.height = viewport.height;
+                                canvas.width = viewport.width;
+                                
+                                const pageDiv = document.createElement('div');
+                                pageDiv.className = 'pdf-page';
+                                pageDiv.innerHTML = `<div style="text-align: center; margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--text-light)">Page ${i}</div>`;
+                                pageDiv.appendChild(canvas);
+                                container.appendChild(pageDiv);
+                                
+                                const renderContext = {
+                                    canvasContext: context,
+                                    viewport: viewport
+                                };
+                                
+                                page.render(renderContext);
+                            });
+                        }
+                        
+                        if (pdf.numPages > 3) {
+                            const morePages = document.createElement('div');
+                            morePages.style.textAlign = 'center';
+                            morePages.style.marginTop = '1rem';
+                            morePages.style.color = 'var(--text-light)';
+                            morePages.style.fontSize = '0.8rem';
+                            morePages.textContent = `+ ${pdf.numPages - 3} more pages not shown`;
+                            container.appendChild(morePages);
+                        }
+                    }).catch(function(error) {
+                        container.innerHTML = '<div class="unsupported-file">Could not load PDF preview. You can still ask me questions about this document.</div>';
+                        console.error('PDF rendering error:', error);
+                    });
+                }, 500);
+            }
+
+            // Save current chat to localStorage
+            function saveCurrentChat() {
+                if (currentChat.length > 0) {
+                    const chatId = Date.now();
+                    const chatData = {
+                        id: chatId,
+                        title: currentChat[0].content.substring(0, 30) + (currentChat[0].content.length > 30 ? '...' : ''),
+                        messages: currentChat,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    let savedChats = JSON.parse(localStorage.getItem('magicShopChats') || '[]');
+                    savedChats.push(chatData);
+                    localStorage.setItem('magicShopChats', JSON.stringify(savedChats));
+                }
+            }
+
+            // Restore chat history from localStorage
+            function restoreChatHistory() {
+                // In a full implementation, this would load previous chats
+                // For now, we just initialize with the welcome message
+                currentChat = [{
+                    role: 'bot',
+                    content: "Welcome to Magic Shop! 🎩✨<br><br>I'm your personalized learning assistant, here to help you learn in the way that works best for you."
+                }];
+            }
+
+            // Handle window resize
+            function handleWindowResize() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('active');
+                }
+            }
+
+            // Initialize the application
+            init();
         });
+
+        // PDF.js worker initialization
+        window.pdfjsLib = {
+            GlobalWorkerOptions: {}
+        };
     </script>
 </body>
 </html>
