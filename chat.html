@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Personalized Chatbot</title>
+    <link rel="stylesheet" href="chat.css" />
+  </head>
+  <body>
+    <div class="cursor-glow"></div>
+    <div class="particles"></div>
+    <div class="sidebar">
+      <div>
+        <div class="profile">
+          <h2>User Profile</h2>
+          <p>Learning Style: <span id="learningStyle"></span></p>
+          <p>MBTI Type: <span id="mbtiType"></span></p>
+        </div>
+      </div>
+      <button onclick="window.location.href='index.html'">
+        🔄 Retake Quiz
+      </button>
+    </div>
+    <div class="main">
+      <div class="header">
+        <div class="header-title">🎓 AI Personalized Chatbot</div>
+        <button id="modeToggleBtn" class="mode-toggle">🌗 Switch Mode</button>
+      </div>
+      <div class="chatbox" id="chatbox"></div>
+      <div class="input-box">
+        <div class="file-upload-container">
+          <button class="file-upload-btn" title="Upload File">📎</button>
+          <input
+            type="file"
+            id="fileInput"
+            accept=".txt,.pdf"
+            class="file-upload-input"
+          />
+        </div>
+        <input type="text" id="userInput" placeholder="Type your question..." />
+        <button onclick="sendMessage()" class="send-btn">Send</button>
+      </div>
+    </div>
+    <script>
+      const API_CONFIG = {
+        endpoint: "https://openrouter.ai/api/v1/chat/completions",
+
+        apiKey: "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",
+
+        model: "deepseek/deepseek-r1-0528-qwen3-8b:free",
+        
+        additionalHeaders: {
+          "HTTP-Referer": window.location.origin, 
+          "X-Title": "AI Personalized Chatbot" 
+        },
+      };
+
+      const data = JSON.parse(localStorage.getItem("quizResult"));
+      let learningStyle = "Visual";
+      let mbtiType = "INTJ";
+
+      if (data) {
+        learningStyle = data.learningStyle;
+        mbtiType = data.mbti;
+      }
+
+      document.getElementById("learningStyle").innerText = learningStyle;
+      document.getElementById("mbtiType").innerText = mbtiType;
+
+      const chatbox = document.getElementById("chatbox");
+      let fileContent = "";
+
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", async (e) => {
+          const file = e.target.files[0];
+          if (file && file.type === "text/plain") {
+            fileContent = await file.text();
+            alert("File uploaded successfully!");
+          } else {
+            alert("Please upload a valid .txt file.");
+          }
+        });
+
+      function addMessage(content, sender) {
+        const msg = document.createElement("div");
+        msg.className = `message ${sender}`;
+        msg.innerText = content;
+        chatbox.appendChild(msg);
+        chatbox.scrollTop = chatbox.scrollHeight;
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("userInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        addMessage(message, "user");
+        input.value = "";
+        addMessage("Typing...", "bot");
+
+        const systemPrompt = `You are a friendly AI tutor. The user is a ${mbtiType} type and a ${learningStyle} learner. 
+  If Story-based, explain like 5-year-old, use daily examples. If Visual, generate terminal-friendly mindmap.
+  Here is some additional user content:
+${fileContent}`;
+
+        try {
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${API_CONFIG.apiKey}`,
+            ...API_CONFIG.additionalHeaders,
+          };
+
+          const response = await fetch(API_CONFIG.endpoint, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+              model: API_CONFIG.model,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: message },
+              ],
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+          }
+
+          const data = await response.json();
+          const botReply = data.choices[0].message.content.trim();
+          chatbox.removeChild(chatbox.lastChild);
+          addMessage(botReply, "bot");
+        } catch (error) {
+          console.error("API Error:", error);
+          chatbox.removeChild(chatbox.lastChild);
+          addMessage(
+            `⚠️ Error getting response: ${error.message}`,
+            "bot"
+          );
+        }
+      }
+
+      const glow = document.querySelector(".cursor-glow");
+      document.addEventListener("mousemove", (e) => {
+        glow.style.left = e.clientX + "px";
+        glow.style.top = e.clientY + "px";
+      });
+
+      function createParticle() {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = Math.random() * 3 + 3 + "s";
+        p.style.animationDelay = Math.random() * 2 + "s";
+        document.querySelector(".particles").appendChild(p);
+        setTimeout(() => p.remove(), 6000);
+      }
+      setInterval(createParticle, 300);
+
+      const toggleBtn = document.getElementById("modeToggleBtn");
+      toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+      });
+
+      document.getElementById("userInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+    </script>
+  </body>
+</html>
