@@ -58,7 +58,7 @@ This early version is a proof-of-concept for deeply personalized education. We p
 - ...and more
 
 
-##📦 How It Works (Tech Stack)
+## 📦 How It Works (Tech Stack)
 
 - Front-end: HTML, CSS, JS
 
@@ -100,4 +100,4 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 - All testers and contributors!
 
 
-> **Magic Shop)**: Making learning magical!v
+> **Magic Shop)**: Making learning magical! v
