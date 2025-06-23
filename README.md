@@ -38,7 +38,7 @@ Behind the scenes: Magic Shop uses Cloudflare Worker to securely call AI APIs (n
 
 ✅ TXT file upload for personalised summaries and study aids
 
-✅ Custom prompts for Visual learners, Story learners, etc
+✅ Custom prompts for Visual learners, Story-based learners, etc
 
 
 ## 🛣️ Roadmap
