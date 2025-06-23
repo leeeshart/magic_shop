@@ -1,45 +1,73 @@
 # Magic Shop
 
-**Magic Shop** is an AI-powered chatbot that delivers truly personalized learning experiences. By understanding each learner's unique style and cognitive preferences, Magic Shop adapts how it teaches—making education engaging and effective for everyone.
+**Magic Shop** is an AI-powered personalised learning chatbot that helps students learn in the best way for them. By understanding the learning style and cognitive preferences of each student, Magic Shop creates a personalised AI tutor, just for you !
 
 
 ## 🧩 Problem Statement
 
-Just like you can’t expect a fish to climb a tree, education systems often fail by expecting all students to learn in the same way. Everyone has unique learning styles: some learn better visually, others by listening, or through stories. Cognitive preferences, like those identified by MBTI (e.g., INTPs see the big picture, while INTJs are detail-oriented), profoundly impact how information is best processed. When traditional teaching ignores these diverse needs, students get confused, struggle to grasp concepts, and find it difficult to engage—hindering their full potential.
+Just like you can’t expect a fish to climb a tree, education systems often expects all students to learn in same way.
+Everyone has unique learning styles, some learn better visually, others by listening, or through stories and more. Your personality also shapes how you understand the information and process it (e.g., MBTIs like INTPs see the big picture, while INTJs are detail-oriented). When traditional teaching ignores these diverse needs, students struggles to engage and reach their potential.
+
+**Magic Shop** solves this! with an AI tutor that adapts to YOU.
 
 
 ## 🌟 Project Overview
 
 Magic Shop is an early-stage AI chatbot that makes learning personal for everyone:
-- **Personalized Onboarding:** Take a quiz to identify your learning style and MBTI personality type.
-- **Tailored Interactions:** The chatbot adapts its teaching style—whether you’re a visual, auditory, or story-based learner, or have unique cognitive preferences.
-- **Smart Content Summaries:** Upload your study notes or documents, and Magic Shop’s AI (powered by advanced models like OpenAI) will summarize content in a way that matches your learning style:
-  - **Visual learners:** Receive mind maps or flowcharts.
-  - **Auditory learners:** Get audio podcast summaries.
-  - **Story-based learners:** Learn through simple stories and analogies.
+
+-**Step 1:** Take a fun quiz to identify your learning style and MBTI personality type
+
+-**Step 2:** View your personalized learning dashboard and about your MBTI
+
+-**Step 3:** Talk to your personalized AI tutor 
+
+Your AI knows your learning style and MBTI, and adapts how it explains
+
+You can upload your notes (TXT) for AI to summarise just for you as per your learning preference.
+
+Behind the scenes: Magic Shop uses Cloudflare Worker to securely call AI APIs (no keys in front-end!)
 
 
 ## 🚀 Features
 
-- Quiz-based learning style and MBTI personality identification
-- AI-powered chatbot that adapts to your learning preferences
-- Document upload for personalized summaries and study aids
-- Multiple output formats: mind maps, audio, stories, and more
+✅ Learning style + MBTI quiz
+✅ Personalized AI chatbot 
+✅ Secure Cloudflare Worker API proxy
+✅ TXT file upload for personalised summaries and study aids
+✅ Custom prompts for Visual learners, Story learners, etc
 
 
 ## 🛣️ Roadmap
 
-This early version is a proof-of-concept for deeply personalized education. Our next steps:
-- Build a full website with user accounts
-- Support more upload types (videos, website links)
-- Add study tools (flashcards, quizzes)
-- Progress tracking and analytics
-- ...and more!
+This early version is a proof-of-concept for deeply personalized education. We plan to add:
+
+-More file types (PDF, DOCX)
+
+-User login / save progress
+
+-Study tools like Flashcards / quizzes
+
+-Progress tracking
+
+-While our chatbot is mostly focused on visual learners and story-based leraners for now, we plan to make out chatbot adoptable to all various learning styles.
+
+-...and more
 
 
-## 📦 Installation
+##📦 How It Works (Tech Stack)
 
-> _Instructions will be added as the project evolves. For now, please refer to the code and [CONTRIBUTING](CONTRIBUTING.md) guidelines if you’d like to help!_
+-Front-end: HTML, CSS, JS
+
+-Backend: Cloudflare Worker (API proxy to OpenRouter)
+
+AI models: OpenRouter (deepseel/deepseek-r1-0528-qwen3-8b)
+
+GitHub Pages (frontend repo) + Cloudflare (Worker)
+
+
+## 🌐 Live Demo
+
+👉https://magic-shop.pages.dev/
 
 
 ## 📝 Contributing
@@ -49,7 +77,7 @@ Contributions are welcome! Please open issues or pull requests with your ideas, 
 
 ## 👩‍💻 Maintainers
 
-- [leeeshart](https://github.com/leeeshart), [KaustubhNeoge](https://github.com/KaustubhNeoge), [premashtekar](https://github.com/premashtekar)  and contributors
+- [leeeshart](https://github.com/leeeshart), [KaustubhNeoge](https://github.com/KaustubhNeoge) and contributors
 
 
 ## 🪪 License
@@ -59,8 +87,13 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ## 🙏 Acknowledgements
 
-- OpenAI for advanced language models
-- All contributors and testers
+- OpenRouter 
+
+-Cloudflare Workers
+
+-Claude.ai and ChatGpt
+
+-All testers and contributors!
 
 
-> Magic Shop: Making learning magical—one student at a time!v
+> **Magic Shop)**: Making learning magical!v
