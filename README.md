@@ -1,4 +1,4 @@
-# Magic Shop
+# ✨ Magic Shop ✨
 
 **Magic Shop** is an AI-powered personalised learning chatbot that helps students learn in the best way for them. By understanding the learning style and cognitive preferences of each student, Magic Shop creates a personalised AI tutor, just for you !
 
@@ -100,4 +100,4 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 - All testers and contributors!
 
 
-> **Magic Shop)**: Making learning magical! v
+> **Magic Shop)**: Making learning magical! 
