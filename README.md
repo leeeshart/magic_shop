@@ -77,7 +77,7 @@ Contributions are welcome! Please open issues or pull requests with your ideas, 
 
 ## 👩‍💻 Maintainers
 
-- [leeeshart](https://github.com/leeeshart), [KaustubhNeoge](https://github.com/KaustubhNeoge) and contributors
+-[KaustubhNeoge](https://github.com/KaustubhNeoge), [leeeshart](https://github.com/leeeshart) and contributors
 
 
 ## 🪪 License
