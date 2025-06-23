@@ -9,49 +9,101 @@
   <body>
     <div class="cursor-glow"></div>
     <div class="particles"></div>
-    <div class="sidebar">
-      <div>
+    
+    <button class="sidebar-toggle" id="sidebarToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-content">
         <div class="profile">
-          <h2>User Profile</h2>
-          <p>Learning Style: <span id="learningStyle"></span></p>
-          <p>MBTI Type: <span id="mbtiType"></span></p>
+          <div class="profile-header">
+            <div class="profile-icon">👤</div>
+            <h2>User Profile</h2>
+          </div>
+          <div class="profile-info">
+            <div class="info-item">
+              <span class="label">Learning Style:</span>
+              <span class="value" id="learningStyle">Visual</span>
+            </div>
+            <div class="info-item">
+              <span class="label">MBTI Type:</span>
+              <span class="value" id="mbtiType">INTJ</span>
+            </div>
+          </div>
         </div>
       </div>
-      <button onclick="window.location.href='index.html'">
-        🔄 Retake Quiz
-      </button>
+      <div class="sidebar-footer">
+        <button class="retake-btn" onclick="window.location.href='index.html'">
+          <span class="btn-icon">🔄</span>
+          <span class="btn-text">Retake Quiz</span>
+        </button>
+      </div>
     </div>
+    
     <div class="main">
       <div class="header">
-        <div class="header-title">🎓 AI Personalized Chatbot</div>
-        <button id="modeToggleBtn" class="mode-toggle">🌗 Switch Mode</button>
-      </div>
-      <div class="chatbox" id="chatbox"></div>
-      <div class="input-box">
-        <div class="file-upload-container">
-          <button class="file-upload-btn" title="Upload File">📎</button>
-          <input
-            type="file"
-            id="fileInput"
-            accept=".txt,.pdf"
-            class="file-upload-input"
-          />
+        <div class="header-content">
+          <div class="header-title">
+            <span class="title-icon">🎓</span>
+            <span class="title-text">AI Personalized Chatbot</span>
+          </div>
+          <button id="modeToggleBtn" class="mode-toggle">
+            <span class="toggle-icon">🌗</span>
+            <span class="toggle-text">Switch Mode</span>
+          </button>
         </div>
-        <input type="text" id="userInput" placeholder="Type your question..." />
-        <button onclick="sendMessage()" class="send-btn">Send</button>
+      </div>
+      
+      <div class="chat-container">
+        <div class="chatbox" id="chatbox">
+          <div class="welcome-message">
+            <div class="welcome-icon">💬</div>
+            <h3>Welcome to your AI Tutor!</h3>
+            <p>I'm here to help you learn based on your learning style and cognitive preference. Ask me anything!</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="input-container">
+        <div class="input-box">
+          <div class="file-upload-container">
+            <button class="file-upload-btn" id="fileUploadBtn" title="Upload File">
+              <span class="upload-icon">📎</span>
+            </button>
+            <input
+              type="file"
+              id="fileInput"
+              accept=".txt"
+              class="file-upload-input"
+              style="display: none;"
+            />
+          </div>
+          <div class="input-wrapper">
+            <input type="text" id="userInput" placeholder="Type your question here..." />
+          </div>
+          <button onclick="sendMessage()" class="send-btn">
+            <span class="send-icon">➤</span>
+            <span class="send-text">Send</span>
+          </button>
+        </div>
       </div>
     </div>
+    
+    <script id="app-config"></script>
+    
     <script>
-      const API_CONFIG = {
+      const API_CONFIG = window.APP_CONFIG || {
         endpoint: "https://openrouter.ai/api/v1/chat/completions",
-
-        apiKey: "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",
-
+        apiKey: "your-development-api-key-here",//#########################################################################
         model: "deepseek/deepseek-r1-0528-qwen3-8b:free",
-        
         additionalHeaders: {
-          "HTTP-Referer": window.location.origin, 
-          "X-Title": "AI Personalized Chatbot" 
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "AI Personalized Chatbot",
         },
       };
 
@@ -70,24 +122,116 @@
       const chatbox = document.getElementById("chatbox");
       let fileContent = "";
 
-      document
-        .getElementById("fileInput")
-        .addEventListener("change", async (e) => {
-          const file = e.target.files[0];
-          if (file && file.type === "text/plain") {
-            fileContent = await file.text();
-            alert("File uploaded successfully!");
-          } else {
-            alert("Please upload a valid .txt file.");
-          }
-        });
+      document.getElementById("fileUploadBtn").addEventListener("click", () => {
+        document.getElementById("fileInput").click();
+      });
+
+      document.getElementById("fileInput").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (file && file.type === "text/plain") {
+          fileContent = await file.text();
+          showNotification("File uploaded successfully!", "success");
+          
+          addMessage(`📄 Uploaded file: ${file.name}`, "user");
+          await analyzeUploadedFile();
+        } else {
+          showNotification("Please upload a valid .txt file.", "error");
+        }
+      });
+
+      function showNotification(message, type) {
+        const notification = document.createElement("div");
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.classList.add("show");
+        }, 100);
+        
+        setTimeout(() => {
+          notification.classList.remove("show");
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
 
       function addMessage(content, sender) {
+        const welcomeMsg = chatbox.querySelector(".welcome-message");
+        if (welcomeMsg) {
+          welcomeMsg.remove();
+        }
+
         const msg = document.createElement("div");
         msg.className = `message ${sender}`;
-        msg.innerText = content;
+        
+        const msgContent = document.createElement("div");
+        msgContent.className = "message-content";
+        msgContent.textContent = content;
+        
+        const msgTime = document.createElement("div");
+        msgTime.className = "message-time";
+        msgTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        msg.appendChild(msgContent);
+        msg.appendChild(msgTime);
+        
         chatbox.appendChild(msg);
         chatbox.scrollTop = chatbox.scrollHeight;
+      }
+
+      async function analyzeUploadedFile() {
+        const typingIndicator = document.createElement("div");
+        typingIndicator.className = "message bot typing";
+        typingIndicator.innerHTML = `
+          <div class="message-content">
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        `;
+        chatbox.appendChild(typingIndicator);
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        const systemPrompt = `You are a friendly AI tutor. The user is a ${mbtiType} type and a ${learningStyle} learner. 
+If Story-based, explain like 5-year-old, use daily examples. If Visual, generate terminal-friendly mindmap.
+The user has uploaded a text file. Please analyze the content and provide a helpful summary or explanation based on their learning style.`;
+
+        try {
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${API_CONFIG.apiKey}`,
+            ...API_CONFIG.additionalHeaders,
+          };
+
+          const response = await fetch(API_CONFIG.endpoint, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify({
+              model: API_CONFIG.model,
+              messages: [
+                { role: "system", content: systemPrompt },
+                { role: "user", content: `Please analyze this uploaded content and provide insights: ${fileContent}` },
+              ],
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+          }
+
+          const data = await response.json();
+          const botReply = data.choices[0].message.content.trim();
+          
+          chatbox.removeChild(typingIndicator);
+          addMessage(botReply, "bot");
+        } catch (error) {
+          console.error("API Error:", error);
+          chatbox.removeChild(typingIndicator);
+          addMessage(`⚠️ Error analyzing file: ${error.message}`, "bot");
+        }
       }
 
       async function sendMessage() {
@@ -97,11 +241,23 @@
 
         addMessage(message, "user");
         input.value = "";
-        addMessage("Typing...", "bot");
+        const typingIndicator = document.createElement("div");
+        typingIndicator.className = "message bot typing";
+        typingIndicator.innerHTML = `
+          <div class="message-content">
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        `;
+        chatbox.appendChild(typingIndicator);
+        chatbox.scrollTop = chatbox.scrollHeight;
 
         const systemPrompt = `You are a friendly AI tutor. The user is a ${mbtiType} type and a ${learningStyle} learner. 
-  If Story-based, explain like 5-year-old, use daily examples. If Visual, generate terminal-friendly mindmap.
-  Here is some additional user content:
+If Story-based, explain like 5-year-old, use daily examples. If Visual, generate terminal-friendly mindmap.
+Here is some additional user content:
 ${fileContent}`;
 
         try {
@@ -130,23 +286,23 @@ ${fileContent}`;
 
           const data = await response.json();
           const botReply = data.choices[0].message.content.trim();
-          chatbox.removeChild(chatbox.lastChild);
+          
+          chatbox.removeChild(typingIndicator);
           addMessage(botReply, "bot");
         } catch (error) {
           console.error("API Error:", error);
-          chatbox.removeChild(chatbox.lastChild);
-          addMessage(
-            `⚠️ Error getting response: ${error.message}`,
-            "bot"
-          );
+          chatbox.removeChild(typingIndicator);
+          addMessage(`⚠️ Error getting response: ${error.message}`, "bot");
         }
       }
 
       const glow = document.querySelector(".cursor-glow");
-      document.addEventListener("mousemove", (e) => {
-        glow.style.left = e.clientX + "px";
-        glow.style.top = e.clientY + "px";
-      });
+      if (window.innerWidth > 768) {
+        document.addEventListener("mousemove", (e) => {
+          glow.style.left = e.clientX + "px";
+          glow.style.top = e.clientY + "px";
+        });
+      }
 
       function createParticle() {
         const p = document.createElement("div");
@@ -157,17 +313,52 @@ ${fileContent}`;
         document.querySelector(".particles").appendChild(p);
         setTimeout(() => p.remove(), 6000);
       }
-      setInterval(createParticle, 300);
+      
+      const particleInterval = window.innerWidth <= 768 ? 1000 : 400;
+      setInterval(createParticle, particleInterval);
 
       const toggleBtn = document.getElementById("modeToggleBtn");
       toggleBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark");
+        const icon = toggleBtn.querySelector(".toggle-icon");
+        const text = toggleBtn.querySelector(".toggle-text");
+        
+        if (document.body.classList.contains("dark")) {
+          icon.textContent = "☀️";
+          text.textContent = "Light Mode";
+        } else {
+          icon.textContent = "🌗";
+          text.textContent = "Dark Mode";
+        }
       });
 
       document.getElementById("userInput").addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
           sendMessage();
         }
+      });
+
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const sidebar = document.getElementById("sidebar");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+      function toggleSidebar() {
+        sidebar.classList.toggle("active");
+        sidebarToggle.classList.toggle("active");
+        sidebarOverlay.classList.toggle("active");
+        document.body.classList.toggle("sidebar-open");
+      }
+
+      sidebarToggle.addEventListener("click", toggleSidebar);
+      sidebarOverlay.addEventListener("click", toggleSidebar);
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 768 && sidebar.classList.contains("active")) {
+          sidebar.classList.remove("active");
+          sidebarToggle.classList.remove("active");
+          sidebarOverlay.classList.remove("active");
+          document.body.classList.remove("sidebar-open");
+        } 
       });
     </script>
   </body>
