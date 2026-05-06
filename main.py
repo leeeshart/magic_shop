@@ -55,12 +55,24 @@ def get_learning_style(answers: QuizAnswers):
         return "Auditory", visual, auditory, story
     return "Story-based", visual, auditory, story
 
-def parse_mbti_label(raw_label: str) -> str:
-    """Handles both 'INTJ' and 'label_0' style outputs."""
+def parse_mbti_label(raw_label: str, ei: str) -> str:
+    """Handles 'INTJ', 'INTP/ENTP', and 'label_0' style outputs.
+    Uses ei ('E' or 'I') to resolve slash-separated ambiguous labels."""
     mbti_types = [
         "INTJ","INTP","INFJ","INFP","ISTJ","ISTP","ISFJ","ISFP",
         "ENTJ","ENTP","ENFJ","ENFP","ESTJ","ESTP","ESFJ","ESFP"
     ]
+    ei = ei.upper() if ei and ei.upper() in ("E", "I") else ""
+    # Handle slash-separated labels like 'INTP/ENTP'
+    if "/" in raw_label:
+        candidates = [t.strip().upper() for t in raw_label.split("/")]
+        for candidate in candidates:
+            if ei and candidate.startswith(ei) and candidate in mbti_types:
+                return candidate
+        # Fallback: return the first valid candidate
+        for candidate in candidates:
+            if candidate in mbti_types:
+                return candidate
     upper = raw_label.upper()
     if upper in mbti_types:
         return upper
@@ -75,7 +87,7 @@ def predict(answers: QuizAnswers):
     text = build_text(answers)
     result = classifier(text)
     raw_label = result[0]["label"]
-    mbti = parse_mbti_label(raw_label)
+    mbti = parse_mbti_label(raw_label, answers.q5)  # q5 is E or I
     learning_style, visual, auditory, story = get_learning_style(answers)
     return {
         "mbti": mbti,
