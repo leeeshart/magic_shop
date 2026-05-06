@@ -94,18 +94,25 @@
       </div>
     </div>
     
-    <script id="app-config"></script>
-    
-    <script>
-      const API_CONFIG = window.APP_CONFIG || {
-        endpoint: "https://openrouter.ai/api/v1/chat/completions",
-        apiKey: "your-development-api-key-here",//#########################################################################
-        model: "deepseek/deepseek-r1-0528-qwen3-8b:free",
-        additionalHeaders: {
-          "HTTP-Referer": window.location.origin,
-          "X-Title": "AI Personalized Chatbot",
-        },
-      };
+    <script type="module">
+      import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.0';
+
+      // Load model once when page opens
+      const chatModel = await pipeline(
+        'text-generation',
+        'Xenova/TinyLlama-1.1B-Chat-v1.0'
+      );
+
+      const MAX_RESPONSE_TOKENS = 300;
+
+      async function callML(userMessage, systemPrompt) {
+        const prompt = `<|system|>\n${systemPrompt}</s>\n<|user|>\n${userMessage}</s>\n<|assistant|>\n`;
+        const result = await chatModel(prompt, { max_new_tokens: MAX_RESPONSE_TOKENS });
+        const fullText = result[0].generated_text;
+        const marker = '<|assistant|>';
+        const markerIndex = fullText.lastIndexOf(marker);
+        return (markerIndex !== -1 ? fullText.slice(markerIndex + marker.length) : fullText).trim();
+      }
 
       const data = JSON.parse(localStorage.getItem("quizResult"));
       let learningStyle = "Visual";
@@ -199,36 +206,14 @@ If Story-based, explain like 5-year-old, use daily examples. If Visual, generate
 The user has uploaded a text file. Please analyze the content and provide a helpful summary or explanation based on their learning style.`;
 
         try {
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${API_CONFIG.apiKey}`,
-            ...API_CONFIG.additionalHeaders,
-          };
-
-          const response = await fetch(API_CONFIG.endpoint, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify({
-              model: API_CONFIG.model,
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: `Please analyze this uploaded content and provide insights: ${fileContent}` },
-              ],
-            }),
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-          }
-
-          const data = await response.json();
-          const botReply = data.choices[0].message.content.trim();
-          
+          const botReply = await callML(
+            `Please analyze this uploaded content and provide insights: ${fileContent}`,
+            systemPrompt
+          );
           chatbox.removeChild(typingIndicator);
           addMessage(botReply, "bot");
         } catch (error) {
-          console.error("API Error:", error);
+          console.error("ML Error:", error);
           chatbox.removeChild(typingIndicator);
           addMessage(`⚠️ Error analyzing file: ${error.message}`, "bot");
         }
@@ -261,40 +246,17 @@ Here is some additional user content:
 ${fileContent}`;
 
         try {
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${API_CONFIG.apiKey}`,
-            ...API_CONFIG.additionalHeaders,
-          };
-
-          const response = await fetch(API_CONFIG.endpoint, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify({
-              model: API_CONFIG.model,
-              messages: [
-                { role: "system", content: systemPrompt },
-                { role: "user", content: message },
-              ],
-            }),
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-          }
-
-          const data = await response.json();
-          const botReply = data.choices[0].message.content.trim();
-          
+          const botReply = await callML(message, systemPrompt);
           chatbox.removeChild(typingIndicator);
           addMessage(botReply, "bot");
         } catch (error) {
-          console.error("API Error:", error);
+          console.error("ML Error:", error);
           chatbox.removeChild(typingIndicator);
           addMessage(`⚠️ Error getting response: ${error.message}`, "bot");
         }
       }
+
+      window.sendMessage = sendMessage;
 
       const glow = document.querySelector(".cursor-glow");
       if (window.innerWidth > 768) {
