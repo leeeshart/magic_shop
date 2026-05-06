@@ -13,7 +13,7 @@ app.add_middleware(
 )
 
 print("Loading model...")
-classifier = pipeline("text-classification", model="Minej/bert-base-personality")
+classifier = pipeline("text-classification", model="padmajabfrl/MBTI-Personality-Prediction")
 print("Label format:", classifier.model.config.id2label)
 
 class QuizAnswers(BaseModel):
