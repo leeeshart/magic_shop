@@ -74,7 +74,7 @@ def predict(answers: QuizAnswers):
     text = build_text(answers)
     result = classifier(text)
     raw_label = result[0]["label"]
-    mbti = parse_mbti_label(raw_label, answers.q5)
+    mbti = parse_mbti_label(raw_label, answers.q5)  # q5 is E or I
     learning_style, visual, auditory, story = get_learning_style(answers)
     return {
         "mbti": mbti,
