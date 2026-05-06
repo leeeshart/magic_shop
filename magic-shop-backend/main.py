@@ -55,27 +55,26 @@ def get_learning_style(answers: QuizAnswers):
         return "Auditory", visual, auditory, story
     return "Story-based", visual, auditory, story
 
-def parse_mbti_label(raw_label: str) -> str:
-    """Handles both 'INTJ' and 'label_0' style outputs."""
-    mbti_types = [
-        "INTJ","INTP","INFJ","INFP","ISTJ","ISTP","ISFJ","ISFP",
-        "ENTJ","ENTP","ENFJ","ENFP","ESTJ","ESTP","ESFJ","ESFP"
-    ]
-    upper = raw_label.upper()
-    if upper in mbti_types:
-        return upper
-    # If model returns label_0, label_1 etc., map via id2label
-    id2label = classifier.model.config.id2label
-    if raw_label in id2label:
-        return id2label[raw_label].upper()
-    return "INTJ"  # fallback
+def parse_mbti_label(raw_label: str, ei: str) -> str:
+    """
+    Model returns paired labels like 'INTP/ENTP'.
+    We split using the E/I answer from the quiz.
+    """
+    # raw_label looks like 'INTP/ENTP' or 'INFJ/ENFJ'
+    parts = raw_label.split("/")  # ['INTP', 'ENTP']
+
+    for part in parts:
+        if part.startswith(ei):  # match E or I from quiz
+            return part
+
+    return parts[0]  # fallback to first if no match
 
 @app.post("/predict")
 def predict(answers: QuizAnswers):
     text = build_text(answers)
     result = classifier(text)
     raw_label = result[0]["label"]
-    mbti = parse_mbti_label(raw_label)
+    mbti = parse_mbti_label(raw_label, answers.q5)
     learning_style, visual, auditory, story = get_learning_style(answers)
     return {
         "mbti": mbti,
