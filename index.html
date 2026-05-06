@@ -409,54 +409,44 @@
         });
       });
 
-      document
-        .getElementById("quizForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
+      document.getElementById("quizForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        document.querySelector(".loading-overlay").style.display = "flex";
 
-          document.querySelector(".loading-overlay").style.display = "flex";
-          setTimeout(() => {
-            let visual = 0,
-              auditory = 0,
-              story = 0;
+        const answers = {
+          q1: document.querySelector('input[name="q1"]:checked').value,
+          q2: document.querySelector('input[name="q2"]:checked').value,
+          q3: document.querySelector('input[name="q3"]:checked').value,
+          q4: document.querySelector('input[name="q4"]:checked').value,
+          q5: document.querySelector('input[name="q5"]:checked').value,
+          q6: document.querySelector('input[name="q6"]:checked').value,
+          q7: document.querySelector('input[name="q7"]:checked').value,
+          q8: document.querySelector('input[name="q8"]:checked').value,
+        };
 
-            const styleQuestions = ["q1", "q2", "q3", "q4"];
-            styleQuestions.forEach((q) => {
-              const answer = document.querySelector(
-                `input[name="${q}"]:checked`
-              ).value;
-              if (answer === "Visual") visual++;
-              else if (answer === "Auditory") auditory++;
-              else story++;
-            });
-
-            const ei = document.querySelector('input[name="q5"]:checked').value;
-            const sn = document.querySelector('input[name="q6"]:checked').value;
-            const tf = document.querySelector('input[name="q7"]:checked').value;
-            const jp = document.querySelector('input[name="q8"]:checked').value;
-
-            const mbti = ei + sn + tf + jp;
-
-            let learningStyle = "";
-            if (visual >= auditory && visual >= story) learningStyle = "Visual";
-            else if (auditory >= visual && auditory >= story)
-              learningStyle = "Auditory";
-            else learningStyle = "Story-based";
-
-            const resultData = {
-              visual,
-              auditory,
-              story,
-              mbti,
-              learningStyle,
-            };
-
-            localStorage.setItem("quizResult", JSON.stringify(resultData));
-            window.open("result.html", "_blank");
-
-            document.querySelector(".loading-overlay").style.display = "none";
-          }, 2000);
-        });
+        try {
+          const response = await fetch("http://localhost:8000/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(answers),
+          });
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+          }
+          const data = await response.json();
+          localStorage.setItem("quizResult", JSON.stringify(data));
+          window.open("result.html", "_blank");
+        } catch (err) {
+          if (err instanceof TypeError) {
+            alert("Could not connect to backend. Make sure the FastAPI server is running.");
+          } else {
+            alert(`An error occurred: ${err.message}`);
+          }
+          console.error(err);
+        } finally {
+          document.querySelector(".loading-overlay").style.display = "none";
+        }
+      });
 
       const toggleBtn = document.getElementById("modeToggleBtn");
 
